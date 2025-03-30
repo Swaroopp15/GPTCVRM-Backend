@@ -11,15 +11,38 @@ const getAllPlacements = async (req, res) => {
     }
 };
 
+const getPlacementYears = async (req, res) => {
+  try {
+      const [rows] = await db.execute(queries.getPlacementYears);
+      res.json({years : rows});
+  } catch (error) {
+      res.status(500).json({ error: 'Error fetching placement years' });
+  }
+};
+
+const getPlacements = async (req, res) => {
+  const { year, depo_code } = req.params;
+  try{
+    const rows = await db.execute(queries.getPlacementsByDepo_code, [depo_code, year]);
+    res.json(rows[0]);
+  }
+  catch(error) {
+    res.status(500).json({ error: 'Error fetching placements' });
+    console.log("error at getting departments placements : ", error);
+    
+  }
+}
+
 const addPlacement = async (req, res) => {
-  const { name, company, package, year } = req.body;
+  const { name, company, package, year, role, pin } = req.body;
   try {
       await db.execute(
           queries.addPlacement,
-          [name, company, package, year]
+          [name, company, package, year, role, pin]
       );
       res.json({ message: 'Placement record added successfully' });
   } catch (error) {
+    console.log(error);
       res.status(500).json({ error: 'Error adding placement record' });
   }
 };
@@ -36,4 +59,4 @@ const deletePlacement = async (req, res) => {
 };
 
 
-module.exports = { getAllPlacements, addPlacement, deletePlacement };
+module.exports = { getAllPlacements, addPlacement, deletePlacement, getPlacements, getPlacementYears };

@@ -6,12 +6,13 @@ const {
     updateFaculty,
     deleteFaculty
 } = require('../controllers/faculty');
+const upload = require('../handlers/multer');
 
 const router = express.Router();
 
 router.get('/', getAllFaculty);
 router.get('/:id', getFacultyById);
-router.post('/', addFaculty);
+router.post('/', upload.single("image"), addFaculty);
 router.put('/:id', updateFaculty);
 router.delete('/:id', deleteFaculty);
 

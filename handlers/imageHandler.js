@@ -6,7 +6,7 @@ const getMultipleImages = async (parentDir, childDir) => {
     return null;
   }
   childDir = childDir.toString();
-  const directoryPath = path.join(__dirname, "..", "..", "public", "Uploads", parentDir, childDir);
+  const directoryPath = path.join(__dirname, "..", "..", "public", "uploads", parentDir, childDir);
   const domainName = "http://localhost:7000/";
   try {
     const files = await fs.promises.readdir(directoryPath); // Use fs.promises.readdir
@@ -23,7 +23,7 @@ const getMultipleImages = async (parentDir, childDir) => {
 };
 
 const postMultipleFiles = async (parentDir, childDir, files) => {
-  const directoryPath = path.join(__dirname, "..", "..", "public", "Uploads", parentDir, childDir);
+  const directoryPath = path.join(__dirname, "..", "..", "public", "uploads", parentDir, childDir);
   try {
     if (!fs.existsSync(directoryPath)) {
       fs.mkdirSync(directoryPath, { recursive: true });

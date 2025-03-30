@@ -13,13 +13,17 @@ const getAllDepartments = async (req, res) => {
 const getDepartment = async (req, res) => {
   try {
     const { depo_code } = req.params;
+    console.log("department depo_code" , depo_code);
+    
     const [rows] = await db.execute(queries.getDepartment, [depo_code]);
     if (rows.length === 0) {
       return res.status(404).json({ error: "Department not found" });
     }
     res.json(rows[0]);
   } catch (error) {
-    res.status(500).json({ error: "Error fetching department" });
+    console.log(error);
+    
+    res.status(500).json({ message: "Error fetching department", error });
   }
 };
 
@@ -67,6 +71,7 @@ const deleteDepartment = async (req, res) => {
     res.status(500).json({ error: "Error deleting department" });
   }
 };
+
 
 module.exports = {
   getAllDepartments,

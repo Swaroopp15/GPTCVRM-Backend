@@ -1,15 +1,43 @@
 const db = require("../database/db");
 const queries = require("../database/queries");
+const fs = require("fs");
+const path = require("path");
 
 // Get all faculty members
 const getAllFaculty = async (req, res) => {
   try {
-    const [rows] = await db.execute(queries.getAllFaculty);
-    res.json(rows);
+    const { depo_code } = req.query;    
+    const [rows] = await db.execute(queries.getAllFaculty, [depo_code]);
+    const faculties = rows.map(faculty => {
+      const facultyImageFolderPath = path.join(
+        process.cwd(),
+        "public",
+        "uploads",
+        "faculty",
+        faculty.image_name
+      );
+
+      let image = null;
+      try {
+        if (fs.existsSync(facultyImageFolderPath)) {
+          const files = fs.readdirSync(facultyImageFolderPath); // Read all files inside folder
+          if (files.length > 0) {
+            image = `uploads/faculty/${faculty.image_name}/${files[0]}`; // ✅ Return URL path
+          }
+        }
+      } catch (err) {
+        console.error(`Error fetching images for ${faculty.image_name}:`, err);
+      }
+      return {...faculty, image};      
+    });    
+
+    res.json(faculties);
   } catch (error) {
-    res.status(500).json({ error: "Error fetching faculty data" });
+    console.log(error);
+    res.status(500).json({ message: "Error fetching faculty data", error });
   }
 };
+
 
 // Get faculty by ID
 const getFacultyById = async (req, res) => {
@@ -24,8 +52,9 @@ const getFacultyById = async (req, res) => {
 
 // Add a new faculty member
 const addFaculty = async (req, res) => {
-  const { faculty_name, email, faculty_role, depo_code, image_name } = req.body;
+  const { faculty_name, email, faculty_role, depo_code } = req.body;
   try {
+    const image_name = email;
     await db.execute(queries.addFaculty, [
       faculty_name,
       email,
@@ -35,7 +64,9 @@ const addFaculty = async (req, res) => {
     ]);
     res.json({ message: "Faculty added successfully" });
   } catch (error) {
-    res.status(500).json({ error: "Error adding faculty" });
+    console.log(error);
+
+    res.status(500).json({ message: "Error adding faculty", error });
   }
 };
 
