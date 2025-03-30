@@ -1,9 +1,10 @@
 const express = require('express');
-const { getAllResults, addResult, deleteResult } = require('../controllers/results');
+const { getAllResults, addResult, deleteResult, getAvailableYears } = require('../controllers/results');
 
 const router = express.Router();
 
-router.get('/:year', getAllResults);
+router.get('/get-results/:year', getAllResults);
+router.get('/get-years', getAvailableYears);
 router.post('/', addResult);
 router.delete('/:id', deleteResult);
 

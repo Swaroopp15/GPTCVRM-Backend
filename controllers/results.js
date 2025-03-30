@@ -1,16 +1,36 @@
 const db = require("../database/db");
 
 const getAllResults = async (req, res) => {
-  const { year } = req.params;
+  const { year, depo_code } = req.query;
   try {
-    const [rows] = await db.execute("SELECT * FROM results WHERE year = ?", [
-      year,
-    ]);
+    const [rows] = await db.execute("SELECT * FROM results WHERE year = ? AND depo_code = ?", [year, depo_code]);
     res.json(rows);
   } catch (error) {
     res.status(500).json({ error: "Error fetching results" });
   }
 };
+
+const getAvailableYears = async (req, res) => {
+  try {
+    const [rows] = await db.execute("SELECT DISTINCT year FROM results");
+    res.json(rows);
+  }
+  catch (error) {
+    res.status(500).json({ error: "Error fetching years" });
+  }
+};
+const getAvailableDepartments = async (req, res) => {
+  try {
+    const year = req.query.year;
+    const [rows] = await db.execute("SELECT DISTINCT depo_code FROM results WHERE year = ?", [year]);
+    res.json({
+      departments : rows
+    })
+  } catch (error) {
+    console.log("Error at getting available departments for specified year : ", error);
+    res.status(500).send({message: "Error at getting available departments for specified year", error});
+  }
+} 
 
 const addResult = async (req, res) => {
   const { pin, name, application_id, percentage, year } = req.body;
@@ -36,4 +56,4 @@ const deleteResult = async (req, res) => {
   }
 };
 
-module.exports = { getAllResults, addResult, deleteResult };
+module.exports = { getAllResults, addResult, deleteResult, getAvailableYears };
