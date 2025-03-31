@@ -41,7 +41,7 @@ const addCommitteeMember = 'INSERT INTO committee_members (committee_id, faculty
 const deleteCommittee = 'DELETE FROM committes WHERE committee_id = ?';
 
 // Event queries
-const addEvent = 'INSERT INTO events (name, description, images, event_date) VALUES (?, ?, ?, ?)';
+const addEvent = 'INSERT INTO events (title, description, images, event_date) VALUES (?, ?, ?, ?)';
 const getEvents = 'SELECT * FROM events ORDER BY event_date DESC;';
 const deleteEvent = 'DELETE FROM events WHERE id = ?';
 
