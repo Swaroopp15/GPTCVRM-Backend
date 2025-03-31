@@ -21,7 +21,7 @@ const addNotification = async (req, res) => {
       isLink,
       link,
     ]);
-    res.json(result[0]);
+    res.json({message : "Notification added successfully", result: result[0]});
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Error adding notification", error });
@@ -32,7 +32,7 @@ const deleteNotification = async (req, res) => {
   try {
     const id = req.params.id;
     const result = await db.query(queries.deleteNotification, [id]);
-    res.json(result[0]);
+    res.json({message : "Notification deleted successfully", result: result[0]});
   }
   catch (error) {
     console.error(error);
