@@ -8,7 +8,6 @@ const storage = multer.diskStorage({
     const { category, subfolder } = req.body;
     console.log(req.body);
     
-
     // Ensure category and subfolder exist
     if (!category || !subfolder) {
       return cb(new Error("Category and subfolder are required"), null);
