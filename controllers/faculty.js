@@ -75,12 +75,13 @@ const updateFaculty = async (req, res) => {
   const { id } = req.params;
   const { faculty_name, email, faculty_role, depo_code, image_name } = req.body;
   try {
+    const [rows] = await db.execute(queries.getFacultyById, [id]);
     await db.execute(queries.updateFaculty, [
-      faculty_name,
-      email,
-      faculty_role,
-      depo_code,
-      image_name,
+      faculty_name || rows[0].faculty_name,
+      email || rows[0].email,
+      faculty_role || rows[0].faculty_role,
+      depo_code || rows[0].depo_code,
+      image_name || rows[0].image_name,
       id,
     ]);
     res.json({ message: "Faculty updated successfully" });

@@ -29,6 +29,8 @@ const getDepartment = async (req, res) => {
 // Add a new department
 const addDepartment = async (req, res) => {
   const { depo_code, department_name, vision, mission } = req.body;
+  console.log(req.body);
+  
   try {
     await db.execute(queries.addDepartment, [
       depo_code,

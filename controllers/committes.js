@@ -20,6 +20,15 @@ const getCommitteeInfo = async (req, res) => {
     res.status(500).json({ message: "Error fetching committee info" });
   }
 };
+const getAvailableFaculty = async (req, res) => {
+  try {
+    const [rows] = await db.execute(queries.getAvailableFaculty);
+    res.json(rows);
+  } catch (error) {
+    console.log("error at fetching facutly who are not in any committees : ", error);
+    res.status(500).send({message: "error at fetching available faculty", error});
+  }
+}
 
 const addCommitteeMember = async (req, res) => {
   try {
@@ -29,7 +38,7 @@ const addCommitteeMember = async (req, res) => {
       faculty_id,
       role,
     ]);
-    console.log(result[0]);
+    res.json(result);
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Error adding committee member" });
@@ -43,17 +52,17 @@ const addCommittee = async (req, res) => {
       name,
       about
     ]);
-    console.log(result[0]);
+    res.json(result[0])
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: "Error adding committee" });
+    res.status(500).json({ message: "Error adding committee", error });
   }
 };
 
 const deleteCommittee = async(req, res) => {
   try {
-    const { committee_id } = req.params;
-    const result = await db.query(queries.deleteCommittee, [committee_id]);
+    const { id } = req.params;
+    const result = await db.query(queries.deleteCommittee, [id]);
     res.json(result[0]);
   }
   catch(error) {
@@ -67,5 +76,6 @@ module.exports = {
   getCommitteeInfo,
   addCommitteeMember,
   addCommittee,
-  deleteCommittee
+  deleteCommittee,
+  getAvailableFaculty
 }
