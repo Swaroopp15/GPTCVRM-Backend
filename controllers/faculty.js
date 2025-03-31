@@ -62,7 +62,7 @@ const addFaculty = async (req, res) => {
       depo_code,
       image_name,
     ]);
-    res.json({ message: "Faculty added successfully" });
+    res.status(201).json({ message: "Faculty added successfully" });
   } catch (error) {
     console.log(error);
 
