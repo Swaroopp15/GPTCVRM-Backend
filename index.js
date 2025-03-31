@@ -10,6 +10,7 @@ const labRouter = require('./routes/labs');
 const committeeRouter = require('./routes/committees');
 const admissionsRouter = require('./routes/admissions');
 const eventRouter = require('./routes/events');
+const notificationRouter = require('./routes/notifications');
 
 const app = express();
 app.use(cors({
@@ -28,7 +29,8 @@ app.use('/results', resultRoutes);
 app.use('/labs', labRouter);
 app.use('/committee', committeeRouter);
 app.use('/admissions', admissionsRouter);
-app.use("/events", eventRouter)
+app.use("/events", eventRouter);
+app.use("/notifications", notificationRouter);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
