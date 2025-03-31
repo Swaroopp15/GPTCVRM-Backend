@@ -45,6 +45,11 @@ const addEvent = 'INSERT INTO events (title, description, images, event_date) VA
 const getEvents = 'SELECT * FROM events ORDER BY event_date DESC;';
 const deleteEvent = 'DELETE FROM events WHERE id = ?';
 
+//notifications queries
+const getNotifications = 'SELECT * FROM notifications ORDER BY date DESC';
+const addNotification = 'INSERT INTO notifications (title, date, isLink, link) VALUES (?, ?, ?, ?)';
+const deleteNotification = 'DELETE FROM notifications WHERE id = ?';
+
 module.exports = {
   addDepartment,
   addFaculty,
@@ -75,5 +80,8 @@ module.exports = {
   addInfo,
   getEvents,
   addEvent,
-  deleteEvent
+  deleteEvent,
+  addNotification,
+  getNotifications,
+  deleteNotification,
 }

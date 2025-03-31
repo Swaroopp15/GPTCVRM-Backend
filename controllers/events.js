@@ -10,13 +10,11 @@ const getEvents = async (req, res) => {
       return res.status(404).json({ message: "No events found" });
     }
     const eventsWithImages = events[0].map(event => {
-          const eventFolderPath = path.join(process.cwd(), "public", event.images);
-          console.log("Event Folder Path:", eventFolderPath);
-          
+          const eventFolderPath = path.join(process.cwd(), "public", event.images);          
           let imageUrls = [];
           try {
             if (fs.existsSync(eventFolderPath)) {
-              const files = fs.readdirSync(eventFolderPath); // Read all files inside folder
+              const files = fs.readdirSync(eventFolderPath);
               imageUrls = files.map(file =>  event.images+ "/"+ file);
             }
           } catch (err) {

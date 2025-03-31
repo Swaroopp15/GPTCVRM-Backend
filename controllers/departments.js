@@ -13,7 +13,6 @@ const getAllDepartments = async (req, res) => {
 const getDepartment = async (req, res) => {
   try {
     const { depo_code } = req.params;
-    console.log("department depo_code" , depo_code);
     
     const [rows] = await db.execute(queries.getDepartment, [depo_code]);
     if (rows.length === 0) {
