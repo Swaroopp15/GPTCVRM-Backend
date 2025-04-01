@@ -13,7 +13,8 @@ const addLabs = async (req, res) => {
     category,
     subfolder,
   } = req.body;
-
+  console.log("images : ", req.files);
+  
   const image_name =
     category.toLowerCase().replace(" ", "_") +
     "/" +

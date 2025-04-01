@@ -33,15 +33,17 @@ const getAvailableDepartments = async (req, res) => {
 } 
 
 const addResult = async (req, res) => {
-  const { pin, name, application_id, percentage, year } = req.body;
+  const { pin, name, application_id, percentage, year, depo_code } = req.body;
   try {
     await db.execute(
-      "INSERT INTO results (pin, name, application_id, percentage, year) VALUES (?, ?, ?, ?, ?)",
-      [pin, name, application_id, percentage, year]
+      "INSERT INTO results (pin, name, application_id, percentage, year, depo_code) VALUES (?, ?, ?, ?, ?,?)",
+      [pin, name, application_id, percentage, year, depo_code]
     );
     res.json({ message: "Result record added successfully" });
   } catch (error) {
-    res.status(500).json({ error: "Error adding result record" });
+    res.status(500).json({ message: "Error adding result record", error });
+    console.log("Error at adding result record : ", error);
+    
   }
 };
 

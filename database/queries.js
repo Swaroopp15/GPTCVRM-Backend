@@ -12,7 +12,7 @@ const updateFaculty = 'UPDATE faculty SET faculty_name = ?, email = ?, faculty_r
 
 // Admissions queries
 const getAdmissions = "SELECT year,JSON_ARRAYAGG(JSON_OBJECT('depo_code', depo_code,'intake', intake,'allocated', allocated )) AS admissions FROM admissions WHERE year BETWEEN YEAR(CURDATE()) - 10 AND YEAR(CURDATE()) GROUP BY year ORDER BY year DESC;"
-const addAdmission = "INSERT INTO year (depo_code, year, intake, allocated) VALUES (?, ?, ?, ?)"
+const addAdmission = "INSERT INTO admissions (depo_code, year, intake, allocated) VALUES (?, ?, ?, ?)"
 // department based queries
 const getAllDepartments = "SELECT department_name, depo_code FROM departments";
 const getDepartment = "SELECT d.depo_code, d.department_name, d.vision, d.mission,JSON_ARRAYAGG(JSON_OBJECT('faculty_id', f.faculty_id,'faculty_name', f.faculty_name,'email', f.email,'faculty_role', f.faculty_role,'image_name', f.image_name)) AS faculty_members FROM departments d LEFT JOIN faculty f ON d.depo_code = f.depo_code WHERE d.depo_code = ? GROUP BY d.depo_code;";

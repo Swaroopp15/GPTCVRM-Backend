@@ -6,6 +6,7 @@ const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     //getting category and subfolder values for storing images in the format `public/uploads/${category}/${subfolder}`
     const { category, subfolder } = req.body;
+    console.log(req.body);
     
     // checking if ther are available
     if (!category || !subfolder) {
@@ -29,6 +30,8 @@ const storage = multer.diskStorage({
   },
   filename: function (req, file, cb) {
     const fileName = file.fieldname + '-' + Date.now() + path.extname(file.originalname);
+    console.log("file name :", fileName);
+    
     cb(null, fileName);
   }
 });

@@ -22,8 +22,8 @@ const addAdmission = async (req, res) => {
     ]);
     res.json(admission[0]);
   } catch (error) {
-    console.error(err);
-    res.status(500).json({ message: "Error adding admissions", error: err });
+    console.error(error);
+    res.status(500).json({ message: "Error adding admissions", error });
   }
 };
 
