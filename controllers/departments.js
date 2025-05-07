@@ -47,18 +47,19 @@ const addDepartment = async (req, res) => {
 // Update department details
 const updateDepartment = async (req, res) => {
   const { depo_code } = req.params;
-  const { department_name, vision, mission, nba_status } = req.body;
+  const { department_name, vision, mission } = req.body;
   try {
     await db.execute(queries.updateDepartment, [
-      department_name,
-      vision,
-      mission,
-      nba_status,
+      department_name,department_name,department_name,
+      vision,vision,vision,
+      mission,mission,mission,
       depo_code,
     ]);
     res.json({ message: "Department updated successfully" });
   } catch (error) {
-    res.status(500).json({ error: "Error updating department" });
+    console.log(error);
+    
+    res.status(500).json({ message: "Error updating department", error });
   }
 };
 
