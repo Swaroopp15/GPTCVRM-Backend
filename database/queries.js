@@ -40,6 +40,7 @@ const getAvailableFaculty = "SELECT * FROM faculty where faculty.faculty_id NOT 
 const addCommittee = 'INSERT INTO committees (committee_name, about) VALUES (?, ?)';
 const addCommitteeMember = 'INSERT INTO committee_members (committee_id, faculty_id, role) VALUES (?, ?, ?)';
 const deleteCommittee = 'DELETE FROM committees WHERE id = ?';
+const updateCommittee = "UPDATE committees SET committee_name = CASE WHEN ? IS NOT NULL AND ? != '' THEN ? ELSE committee_name END, about = CASE WHEN ? IS NOT NULL AND ? != '' THEN ? ELSE about END WHERE id = ?";
 
 // Event queries
 const addEvent = 'INSERT INTO events (title, description, images, event_date) VALUES (?, ?, ?, ?)';
@@ -76,6 +77,7 @@ module.exports = {
   addCommitteeMember,
   getAvailableFaculty,
   deleteCommittee,
+  updateCommittee,
   addAdmission,
   getAdmissions,
   setInfo,

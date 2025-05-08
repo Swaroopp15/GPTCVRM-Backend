@@ -30,6 +30,22 @@ const getAvailableFaculty = async (req, res) => {
   }
 }
 
+const updateCommittee = async (req, res) => {
+  try {
+    const { name, about, id } = req.body;
+    const result = await db.query(queries.updateCommittee, [
+      name, name, name,
+      about, about, about,
+      id,
+    ]);
+    res.json(result[0]);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Error updating committee" });
+  }
+}
+
+
 const addCommitteeMember = async (req, res) => {
   try {
     const { committee_id, faculty_id, role } = req.body;
@@ -77,5 +93,6 @@ module.exports = {
   addCommitteeMember,
   addCommittee,
   deleteCommittee,
-  getAvailableFaculty
+  getAvailableFaculty,
+  updateCommittee
 }
