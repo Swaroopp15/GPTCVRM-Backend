@@ -86,7 +86,7 @@ const updateFaculty = async (req, res) => {
     ]);
     res.json({ message: "Faculty updated successfully" });
   } catch (error) {
-    res.status(500).json({ error: "Error updating faculty" });
+    res.status(500).json({ message: "Error updating faculty", error });
   }
 };
 
