@@ -34,7 +34,6 @@ const getEvents = async (req, res) => {
 const addEvent = async (req, res) => {
   try {
     const { name, description, date, category, subfolder} = req.body;
-    console.log(req.body);
     if (!name || !description || !date) {
       return res.status(400).json({ message: "Name, description, and date are required" });
     }

@@ -31,7 +31,9 @@ const deletePlacement = 'DELETE FROM placements WHERE id = ?';
 // Labs based queries
 const addLab = 'INSERT INTO `labs` (`depo_code`, `lab_name`, `description`, `capacity`, `equipment`, `image_name`) VALUES (?, ?, ?, ?, ?, ?)';
 const getLabs = 'SELECT * FROM labs WHERE depo_code = ?';
+const getLabById = 'SELECT * FROM labs WHERE id = ?';
 const deleteLab = 'DELETE FROM labs WHERE id = ?';
+const updateLab = 'UPDATE labs SET lab_name = ?, description = ?, capacity = ?, equipment = ?, depo_code = ?, image_name = ? WHERE id = ?';
 
 // Committees queries
 const getCommitteeNames = 'SELECT committee_name AS name, id FROM committees';
@@ -70,7 +72,9 @@ module.exports = {
   updateFaculty,
   addLab,
   getLabs,
+  getLabById,
   deleteLab,
+  updateLab,
   getCommitteeNames,
   getCommitteeInfo,
   addCommittee,

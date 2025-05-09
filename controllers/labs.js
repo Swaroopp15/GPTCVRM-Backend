@@ -13,8 +13,7 @@ const addLabs = async (req, res) => {
     category,
     subfolder,
   } = req.body;
-  console.log("images : ", req.files);
-  
+
   const image_name =
     category.toLowerCase().replace(" ", "_") +
     "/" +
@@ -62,7 +61,61 @@ const getLabs = async (req, res) => {
   }
 };
 
+const deleteLab = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const result = await db.query(queries.deleteLab, [id]);
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ message: "Lab not found" });
+    }
+    res.json({ message: "Lab deleted successfully" });
+  } catch (error) {
+    console.log("Error at deleting lab", error);
+    res.status(500).json({ message: "Error at deleting lab", error });
+  }
+};
+const updateLab = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const {
+      lab_name,
+      description,
+      depo_code,
+      capacity,
+      equipment,
+      category,
+      subfolder,
+    } = req.body;
+    const image_name =
+      category.toLowerCase().replace(" ", "_") +
+      "/" +
+      subfolder.toLowerCase().replace(" ", "_");
+    const lab = await db.query(queries.getLabById, [id]);
+    if (lab.length === 0) {
+      return res.status(404).json({ message: "Lab not found" });
+    }
+    const result = await db.query(queries.updateLab, [
+      lab_name || lab[0].lab_name,
+      description || lab[0].description,
+      capacity || lab[0].capacity,
+      equipment || lab[0].equipment,
+      depo_code || lab[0].depo_code,
+      image_name || lab[0].image_name,
+      id,
+    ]);
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ message: "Lab not found" });
+    }
+    res.json({ message: "Lab updated successfully" });
+  } catch (error) {
+    console.log("Error at updating lab", error);
+    res.status(500).json({ message: "Error at updating lab", error });
+  }
+};
+
 module.exports = {
   addLabs,
-	getLabs
+	getLabs,
+  deleteLab,
+  updateLab,
 };
