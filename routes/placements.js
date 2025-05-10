@@ -7,6 +7,6 @@ router.get('/getPlacements/:year', getAllPlacements);
 router.get('/years', getPlacementYears);
 router.get("/:depo_code/:year", getPlacements);
 router.post('/', addPlacement);
-router.delete('/:year/:placement', deletePlacement);
+router.delete('/:id', deletePlacement);
 
 module.exports = router;

@@ -1,49 +1,60 @@
-const db = require('../database/db');
+const db = require("../database/db");
 const queries = require("../database/queries");
 
 const getAllPlacements = async (req, res) => {
-  const {year} = req.params;
-    try {
-        const [rows] = await db.execute(queries.getPlacements, [year]);
-        res.json(rows);
-    } catch (error) {
-        res.status(500).json({ error: 'Error fetching placements' });
-    }
+  const { year } = req.params;
+  try {
+    const [rows] = await db.execute(queries.getPlacements, [year]);
+    res.json(rows);
+  } catch (error) {
+    res.status(500).json({ error: "Error fetching placements" });
+  }
 };
 
 const getPlacementYears = async (req, res) => {
   try {
-      const [rows] = await db.execute(queries.getPlacementYears);
-      res.json({years : rows});
+    const depo_code = req.query.depo_code;
+    if (!depo_code) {
+      return res.status(400).json({ error: "Depo code is required" });
+    }
+    const [rows] = await db.execute(queries.getPlacementYears, [depo_code]);
+    res.json({ years: rows });
   } catch (error) {
-      res.status(500).json({ error: 'Error fetching placement years' });
+    res.status(500).json({ error: "Error fetching placement years" });
   }
 };
 
 const getPlacements = async (req, res) => {
   const { year, depo_code } = req.params;
-  try{
-    const rows = await db.execute(queries.getPlacementsByDepo_code, [depo_code, year]);
-    res.json(rows[0]);
-  }
-  catch(error) {
-    res.status(500).json({ error: 'Error fetching placements' });
-    console.log("error at getting departments placements : ", error);
+  try {
+    const rows = await db.execute(queries.getPlacementsByDepo_code, [
+      depo_code,
+      year,
+    ]);
     
+    res.json(rows[0]);
+  } catch (error) {
+    res.status(500).json({ error: "Error fetching placements" });
+    console.log("error at getting departments placements : ", error);
   }
-}
+};
 
 const addPlacement = async (req, res) => {
-  const { name, company, package, year, role, pin } = req.body;
+  const { name, company, package, year, role, pin, depo_code } = req.body;
   try {
-      await db.execute(
-          queries.addPlacement,
-          [name, company, package, year, role, pin]
-      );
-      res.json({ message: 'Placement record added successfully' });
+    await db.execute(queries.addPlacement, [
+      name,
+      company,
+      package,
+      year,
+      role,
+      pin,
+      depo_code
+    ]);
+    res.json({ message: "Placement record added successfully" });
   } catch (error) {
     console.log(error);
-      res.status(500).json({ error: 'Error adding placement record' });
+    res.status(500).json({ error: "Error adding placement record" });
   }
 };
 
@@ -51,12 +62,20 @@ const addPlacement = async (req, res) => {
 const deletePlacement = async (req, res) => {
   const { id } = req.params;
   try {
-      await db.execute(queries.deletePlacement, [id]);
-      res.json({ message: 'Placement record deleted successfully' });
+    const result = await db.execute(queries.deletePlacement, [id]);
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ error: "Placement record not found" });
+    }
+    res.json({ message: "Placement record deleted successfully" });
   } catch (error) {
-      res.status(500).json({ error: 'Error deleting placement record' });
+    res.status(500).json({ error: "Error deleting placement record" });
   }
 };
 
-
-module.exports = { getAllPlacements, addPlacement, deletePlacement, getPlacements, getPlacementYears };
+module.exports = {
+  getAllPlacements,
+  addPlacement,
+  deletePlacement,
+  getPlacements,
+  getPlacementYears,
+};

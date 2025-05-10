@@ -22,8 +22,8 @@ const updateDepartment = "UPDATE departments SET  department_name = CASE WHEN ? 
 
 // placement based queries
 
-const addPlacement = 'INSERT INTO placements (name, company, package, year, role, student_pin) VALUES (?, ?, ?, ?, ?, ?)';
-const getPlacementYears = 'SELECT DISTINCT year FROM placements ORDER BY year DESC';
+const addPlacement = 'INSERT INTO placements (name, company, package, year, role, student_pin, depo_code) VALUES (?, ?, ?, ?, ?, ?, ?)';
+const getPlacementYears = 'SELECT DISTINCT year FROM placements WHERE depo_code = ? ORDER BY year DESC';
 const getPlacements = 'SELECT * FROM placements WHERE year = ?';
 const getPlacementsByDepo_code = "SELECT * FROM placements WHERE depo_code = ? AND year= ?";
 const deletePlacement = 'DELETE FROM placements WHERE id = ?';
