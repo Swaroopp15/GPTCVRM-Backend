@@ -48,6 +48,8 @@ const updateCommittee = "UPDATE committees SET committee_name = CASE WHEN ? IS N
 const addEvent = 'INSERT INTO events (title, description, images, event_date) VALUES (?, ?, ?, ?)';
 const getEvents = 'SELECT * FROM events ORDER BY event_date DESC;';
 const deleteEvent = 'DELETE FROM events WHERE id = ?';
+const getEventById = "SELECT * FROM events WHERE id = ?";
+const updateEvent = "UPDATE events SET title = CASE WHEN ? IS NOT NULL AND ? != '' THEN ? ELSE title END, description = CASE WHEN ? IS NOT NULL AND ? != '' THEN ? ELSE description END, images = CASE WHEN ? IS NOT NULL AND ? != '' THEN ? ELSE images END, event_date = CASE WHEN ? IS NOT NULL AND ? != '' THEN ? ELSE event_date END WHERE id = ?;";
 
 //notifications queries
 const getNotifications = 'SELECT * FROM notifications ORDER BY date DESC';
@@ -89,6 +91,8 @@ module.exports = {
   getEvents,
   addEvent,
   deleteEvent,
+  getEventById,
+  updateEvent,
   addNotification,
   getNotifications,
   deleteNotification,

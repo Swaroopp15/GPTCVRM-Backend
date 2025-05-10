@@ -2,6 +2,7 @@ const db = require("../database/db");
 const queries = require("../database/queries");
 const fs = require("fs");
 const path = require("path");
+const deletePreviousImage = require("../Utilities/deletePreviousImage");
 
 const addLabs = async (req, res) => {
   const {

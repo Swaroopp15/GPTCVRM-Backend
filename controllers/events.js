@@ -37,11 +37,14 @@ const addEvent = async (req, res) => {
     if (!name || !description || !date) {
       return res.status(400).json({ message: "Name, description, and date are required" });
     }
-    
+    const newDate = new Date(date.split("-").reverse().join("-"));
+    if (isNaN(newDate.getTime())) {
+      return res.status(400).json({ message: "Invalid date format" });
+    }
     const sub = subfolder || name;
     const cate = category || "events";
-    const images = `uploads/${cate}/${sub}`;
-    const result = await db.query(queries.addEvent, [name, description, images, date]);
+    const images = `uploads/${cate}/${sub.split(" ").join("-")}`;
+    const result = await db.query(queries.addEvent, [name, description, images, newDate]);
     res.status(201).json({ message: "Event added successfully", eventId: result.insertId });
   }
   catch (error) {
@@ -63,8 +66,41 @@ const deleteEvent = async (req, res) => {
   }
 }
 
+const updateEvent = async (req, res) => {
+  try{
+    const {id} = req.params;
+    const result = await db.query(queries.getEventById, [id]);
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ message: "Event not found" });
+    }
+    const newEvent = req.body;
+    const sub =  newEvent.subfolder || newEvent.name;
+    const images = `uploads/${newEvent.category || "events"}/${sub.split(" ").join("-")}`;
+    const updateResult = await db.query(queries.updateEvent, [
+      newEvent.title || null,
+      newEvent.title || null,
+      newEvent.title || null,
+      newEvent.description || null,
+      newEvent.description || null,
+      newEvent.description || null,
+      images,
+      images,
+      images,
+      newEvent.event_date || null,
+      newEvent.event_date || null,
+      newEvent.event_date || null,
+      id
+    ]);
+    return res.status(200).json({ message: "Event updated successfully" });
+  }catch(error) {
+    console.log('Error in updating event');
+    res.status(500).json({message: 'Failed to update Event', error});
+  }
+}
+
 module.exports = {
   addEvent,
   getEvents,
-  deleteEvent
+  deleteEvent,
+  updateEvent,
 }
