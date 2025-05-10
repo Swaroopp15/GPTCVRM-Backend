@@ -40,8 +40,32 @@ const deleteNotification = async (req, res) => {
   }
 }
 
+const updateNotification = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { title, date, isLink, link } = req.body;
+    const result = await db.query(queries.getNotificationById, [id]);
+    if (result[0].affectedRows === 0) {
+      return res.status(404).json({ message: "Notification not found" });
+    }
+    const updateResult = await db.query(queries.updateNotification, [
+      title || null,
+      date || null,
+      isLink || null,
+      link || null,
+      id,
+    ]);
+    return res.status(200).json({ message: "Notification updated successfully" });
+  }
+  catch (error) {
+    console.error("Error in updating notification", error);
+    res.status(500).json({ message: "Failed to update notification", error });
+  }
+}
+
 module.exports = {
   getNotifications,
   addNotification,
   deleteNotification,
+  updateNotification,
 };

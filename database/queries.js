@@ -55,6 +55,8 @@ const updateEvent = "UPDATE events SET title = CASE WHEN ? IS NOT NULL AND ? != 
 const getNotifications = 'SELECT * FROM notifications ORDER BY date DESC';
 const addNotification = 'INSERT INTO notifications (title, date, isLink, link) VALUES (?, ?, ?, ?)';
 const deleteNotification = 'DELETE FROM notifications WHERE id = ?';
+const getNotificationById = 'SELECT * FROM notifications WHERE id = ?';
+const updateNotification = 'UPDATE notifications SET title = ?, date = ?, isLink = ?, link = ? WHERE id = ?';
 
 module.exports = {
   addDepartment,
@@ -96,4 +98,6 @@ module.exports = {
   addNotification,
   getNotifications,
   deleteNotification,
+  getNotificationById,
+  updateNotification,
 }

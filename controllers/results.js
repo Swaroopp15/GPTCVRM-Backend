@@ -12,7 +12,11 @@ const getAllResults = async (req, res) => {
 
 const getAvailableYears = async (req, res) => {
   try {
-    const [rows] = await db.execute("SELECT DISTINCT year FROM results");
+    const depo_code = req.query.depo_code;
+    if (!depo_code) {
+      return res.status(400).json({ error: "depo_code is required" });
+    }
+    const [rows] = await db.execute("SELECT DISTINCT year FROM results  WHERE depo_code = ? ORDER BY year DESC", [depo_code]);
     res.json(rows);
   }
   catch (error) {
