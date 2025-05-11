@@ -2,7 +2,6 @@
 const setInfo = 'UPDATE college_info SET info_value = ? WHERE info_key = ?';
 const addInfo = 'INSERT INTO college_info (info_key, info_value) VALUES (?, ?)';
 
-
 // faculty based queries
 const addFaculty = 'INSERT INTO faculty (faculty_name, email, faculty_role, depo_code, image_name) VALUES (?, ?, ?, ?, ?)';
 const deleteFaculty = 'DELETE FROM faculty WHERE faculty_id = ?';
@@ -58,6 +57,11 @@ const deleteNotification = 'DELETE FROM notifications WHERE id = ?';
 const getNotificationById = 'SELECT * FROM notifications WHERE id = ?';
 const updateNotification = 'UPDATE notifications SET title = ?, date = ?, isLink = ?, link = ? WHERE id = ?';
 
+// Authentication queries
+const getUser = "SELECT * FROM users WHERE email = ?";
+const addUser = "INSERT INTO users (email, password, name, role) VALUES(?, ?, ?, ?)";
+
+
 module.exports = {
   addDepartment,
   addFaculty,
@@ -100,4 +104,6 @@ module.exports = {
   deleteNotification,
   getNotificationById,
   updateNotification,
+  getUser,
+  addUser,
 }
