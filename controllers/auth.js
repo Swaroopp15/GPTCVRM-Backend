@@ -56,7 +56,26 @@ const login = async (req, res) => {
   }
 }
 
+const isLoggedIn = async (req, res) => {
+  if (req.session.user) {
+    return res.status(200).json({ loggedIn: true });
+  } else {
+    return res.status(401).json({ loggedIn: false });
+  }
+}
+
+const logout = async (req, res) => {
+  req.session.destroy(err => {
+    if (err) {
+      return res.status(500).json({ message: 'Failed to log out' });
+    }
+    res.status(200).json({ message: 'Logged out successfully' });
+  });
+}
+
 module.exports = {
   register,
   login,
+  isLoggedIn,
+  logout
 };
