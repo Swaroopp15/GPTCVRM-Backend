@@ -98,9 +98,55 @@ const updateEvent = async (req, res) => {
   }
 }
 
+const getEventById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const result = await db.query(queries.getEventById, [id]);
+    
+    if (result.length === 0 || result[0].length === 0) {
+      return res.status(404).json({ message: "Event not found" });
+    }
+
+    const event = result[0][0];
+    const eventFolderPath = path.join(process.cwd(), "public", event.images);
+    let imageUrls = [];
+
+    try {
+      if (fs.existsSync(eventFolderPath)) {
+        const files = fs.readdirSync(eventFolderPath);
+        imageUrls = files.map(file => event.images + "/" + file);
+      }
+    } catch (err) {
+      console.error(`Error fetching images for ${event.images}:`, err);
+    }
+
+    const eventWithImages = { 
+      ...event, 
+      images: imageUrls,
+      // Add additional formatted date fields if needed
+      formatted_date: new Date(event.event_date).toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        weekday: 'long'
+      }),
+      iso_date: new Date(event.event_date).toISOString()
+    };
+
+    res.json(eventWithImages);
+  } catch (error) {
+    console.log("Error getting event by ID:", error);
+    res.status(500).json({ 
+      message: "Error getting event",
+      error: error.message 
+    });
+  }
+}
+
 module.exports = {
   addEvent,
   getEvents,
   deleteEvent,
   updateEvent,
+  getEventById
 }
