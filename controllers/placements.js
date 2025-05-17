@@ -76,7 +76,7 @@ const getAllPlacement = async (req, res) => {
   try {
     const [rows] = await db.execute("SELECT * FROM placements");
     res.json(rows);
-    console.log(rows);
+    // console.log(rows);
   } catch (error) {
     console.error("Error fetching all placements:", error);
     res.status(500).json({ error: "Error fetching all placements" });
