@@ -36,7 +36,7 @@ const updateLab = 'UPDATE labs SET lab_name = ?, description = ?, capacity = ?, 
 
 // Committees queries
 const getCommitteeNames = 'SELECT committee_name AS name, id FROM committees';
-const getCommitteeInfo = "SELECT c.id,c.committee_name AS committee_name,c.about,JSON_ARRAYAGG(JSON_OBJECT('faculty_id', f.faculty_id,'name', f.faculty_name,'email', f.email,'depo_code', f.depo_code,'role', cm.role)) AS members FROM committees c LEFT JOIN committee_members cm ON c.id = cm.committee_id LEFT JOIN faculty f ON cm.faculty_id = f.faculty_id WHERE c.id = ? GROUP BY c.id;";
+const getCommitteeInfo = "SELECT c.id,c.committee_name AS committee_name,c.about,JSON_ARRAYAGG(JSON_OBJECT('faculty_id', f.faculty_id,'name', f.faculty_name,'email', f.email,'number', f.number,'image_name', f.image_name ,'depo_code', f.depo_code,'role', cm.role)) AS members FROM committees c LEFT JOIN committee_members cm ON c.id = cm.committee_id LEFT JOIN faculty f ON cm.faculty_id = f.faculty_id WHERE c.id = ? GROUP BY c.id;";
 const getAvailableFaculty = "SELECT * FROM faculty where faculty.faculty_id NOT IN (SELECT faculty_id FROM committee_members);"
 const addCommittee = 'INSERT INTO committees (committee_name, about) VALUES (?, ?)';
 const addCommitteeMember = 'INSERT INTO committee_members (committee_id, faculty_id, role) VALUES (?, ?, ?)';

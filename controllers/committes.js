@@ -1,5 +1,7 @@
 const db = require("../database/db");
 const queries = require("../database/queries");
+const fs = require("fs");
+const path = require("path");
 
 const getCommitteeNames = async (req, res) => {
   try {
@@ -14,10 +16,32 @@ const getCommitteeInfo = async (req, res) => {
   try {
     const {id} = req.params;
     const committeeInfo = await db.query(queries.getCommitteeInfo, [id]);
-    res.json(committeeInfo[0]);
+    const faculties = committeeInfo[0][0].members.map(faculty => {
+          const facultyImageFolderPath = path.join(
+            process.cwd(),
+            "public",
+            "uploads",
+            "faculty",
+            faculty.image_name
+          );
+    
+          let image = null;
+          try {
+            if (fs.existsSync(facultyImageFolderPath)) {
+              const files = fs.readdirSync(facultyImageFolderPath); // Read all files inside folder
+              if (files.length > 0) {
+                image = `uploads/faculty/${faculty.image_name}/${files[0]}`; // ✅ Return URL path
+              }
+            }
+          } catch (err) {
+            console.error(`Error fetching images for ${faculty.image_name}:`, err);
+          }
+          return {...faculty, image};      
+        });    
+    res.json({committee : committeeInfo[0], faculties: faculties});
   } catch (err) {
     console.error(err);
-    res.status(500).json({ message: "Error fetching committee info" });
+    res.status(500).json({ message: "Error fetching committee info", error: err });
   }
 };
 const getAvailableFaculty = async (req, res) => {
