@@ -61,6 +61,12 @@ const updateNotification = 'UPDATE notifications SET title = ?, date = ?, isLink
 const getUser = "SELECT * FROM users WHERE email = ?";
 const addUser = "INSERT INTO users (email, password, name, role) VALUES(?, ?, ?, ?)";
 
+// Facilities queries
+const addFacility = "INSERT INTO facilities (name, about) VALUES (?, ?)";
+const getFacilities = "SELECT * FROM facilities";
+const deleteFacility = "DELETE FROM facilities WHERE id = ?";
+const updateFacility = "UPDATE facilities SET ? = ? WHERE id = ?";
+
 
 module.exports = {
   addDepartment,
