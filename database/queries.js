@@ -112,4 +112,8 @@ module.exports = {
   updateNotification,
   getUser,
   addUser,
+  getFacilities,
+  deleteFacility,
+  updateFacility,
+  addFacility
 }

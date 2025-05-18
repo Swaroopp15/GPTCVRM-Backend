@@ -11,8 +11,10 @@ const committeeRouter = require('./routes/committees');
 const admissionsRouter = require('./routes/admissions');
 const eventRouter = require('./routes/events');
 const notificationRouter = require('./routes/notifications');
+const facilityRoutes = require('./routes/facility');
 const authRoutes = require('./routes/auth');
 const session = require('express-session');
+const fileUpload = require('express-fileupload');
 
 const app = express();
 app.use(cors({
@@ -33,7 +35,7 @@ app.use(session({
 app.use("/uploads", express.static(path.join(__dirname, "public/uploads")));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
+app.use(fileUpload());
 
 app.use('/college-info', collegeRoute);
 app.use('/faculty', facultyRoutes);
@@ -45,6 +47,7 @@ app.use('/committee', committeeRouter);
 app.use('/admissions', admissionsRouter);
 app.use("/events", eventRouter);
 app.use("/notifications", notificationRouter);
+app.use("/facility", facilityRoutes)
 // Authentication routes
 app.use('/auth', authRoutes);
 
