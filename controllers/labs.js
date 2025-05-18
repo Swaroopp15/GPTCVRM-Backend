@@ -11,6 +11,9 @@ const addLabs = async (req, res) => {
     depo_code,
     capacity,
     equipment,
+    conducted_labs,
+    specifications,
+    budget,
     category,
     subfolder,
   } = req.body;
@@ -26,6 +29,9 @@ const addLabs = async (req, res) => {
       description,
       capacity,
       equipment,
+      conducted_labs,
+      specifications,
+      budget,
       image_name,
     ]);
     res.send({ message: "Posted lab details successfully" });
@@ -39,14 +45,21 @@ const getLabs = async (req, res) => {
   try {
     const { depo_code } = req.query;
     const results = await db.execute(queries.getLabs, [depo_code]);
-    const labsWithImages = results[0].map(lab => {
-      const labFolderPath = path.join(process.cwd(), "public", "uploads", lab.image_name);
-  
+    const labsWithImages = results[0].map((lab) => {
+      const labFolderPath = path.join(
+        process.cwd(),
+        "public",
+        "uploads",
+        lab.image_name
+      );
+
       let imageUrls = [];
       try {
         if (fs.existsSync(labFolderPath)) {
           const files = fs.readdirSync(labFolderPath); // Read all files inside folder
-          imageUrls = files.map(file => `uploads/`+ lab.image_name+ "/"+ file);
+          imageUrls = files.map(
+            (file) => `uploads/` + lab.image_name + "/" + file
+          );
         }
       } catch (err) {
         console.error(`Error fetching images for ${lab.lab_name}:`, err);
@@ -116,7 +129,7 @@ const updateLab = async (req, res) => {
 
 module.exports = {
   addLabs,
-	getLabs,
+  getLabs,
   deleteLab,
   updateLab,
 };

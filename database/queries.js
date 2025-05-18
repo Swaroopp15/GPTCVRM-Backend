@@ -28,11 +28,11 @@ const getPlacementsByDepo_code = "SELECT * FROM placements WHERE depo_code = ? A
 const deletePlacement = 'DELETE FROM placements WHERE id = ?';
 
 // Labs based queries
-const addLab = 'INSERT INTO `labs` (`depo_code`, `lab_name`, `description`, `capacity`, `equipment`, `image_name`) VALUES (?, ?, ?, ?, ?, ?)';
+const addLab = 'INSERT INTO `labs` (`depo_code`, `lab_name`, `description`, `capacity`, `equipment`,`conducted_labs`,`specifications`,`budget`, `image_name`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)';
 const getLabs = 'SELECT * FROM labs WHERE depo_code = ?';
 const getLabById = 'SELECT * FROM labs WHERE id = ?';
 const deleteLab = 'DELETE FROM labs WHERE id = ?';
-const updateLab = 'UPDATE labs SET lab_name = ?, description = ?, capacity = ?, equipment = ?, depo_code = ?, image_name = ? WHERE id = ?';
+const updateLab = 'UPDATE labs SET lab_name = ?, description = ?, capacity = ?, equipment = ?,conducted_labs = ?, specifications = ?, budget = ?,  depo_code = ?, image_name = ? WHERE id = ?';
 
 // Committees queries
 const getCommitteeNames = 'SELECT committee_name AS name, id FROM committees';
