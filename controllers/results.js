@@ -58,8 +58,20 @@ const deleteResult = async (req, res) => {
     await db.execute("DELETE FROM results WHERE id = ?", [id]);
     res.json({ message: "Result record deleted successfully" });
   } catch (error) {
-    res.status(500).json({ error: "Error deleting result record" });
+    res.status(500).json({ message: "Error deleting result record", error });
   }
 };
 
-module.exports = { getAllResults, addResult, deleteResult, getAvailableYears };
+const searchResult = async (req, res) => {
+  try {
+    const {query} = req.query;
+    const newQuery = "%"+query+"%";
+    const data = await db.execute("SELECT * FROM results WHERE name LIKE ? OR application_id LIKE ? OR pin LIKE ?", [newQuery, newQuery, newQuery])
+    res.json(data[0])
+  } catch (error) {
+    console.log("Error in Searching Results : ", error);
+    res.status(500).json({ message: "Error searching result record", error });
+  }
+}
+
+module.exports = { getAllResults, addResult, deleteResult, getAvailableYears, searchResult };
