@@ -1,5 +1,9 @@
+const fileUpload = require("express-fileupload");
 const db = require("../database/db");
 const queries = require("../database/queries");
+const path = require('path');
+const fs = require("fs");
+
 
 const getAllDepartments = async (req, res) => {
   try {
@@ -29,8 +33,6 @@ const getDepartment = async (req, res) => {
 // Add a new department
 const addDepartment = async (req, res) => {
   const { depo_code, department_name, vision, mission, avg_pass } = req.body;
-  console.log(req.body);
-  
   try {
     await db.execute(queries.addDepartment, [
       depo_code,
@@ -39,8 +41,20 @@ const addDepartment = async (req, res) => {
       mission,
       avg_pass
     ]);
+    const imagePath = path.join(process.cwd(), "public", "uploads", "departments", depo_code.toLowerCase());
+    // Logic to check if the path is availble, if not creating the directory
+        if(!fs.existsSync(imagePath)) {
+          fs.mkdirSync(imagePath, {recursive: true});
+        }
+    
+    req.files.department_image.mv(path.join(imagePath, req.files.department_image.name), (err) => {
+      console.log("failed to upload image : ", err);
+      throw new Error(err);
+    })
     res.json({ message: "Department added successfully" });
   } catch (error) {
+    console.log("Error in adding new Department : ", error);
+    
     res.status(500).json({message: "Error adding department", error });
   }
 };

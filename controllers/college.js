@@ -22,6 +22,7 @@ const getCollegeInfo = async (req, res) => {
             departments: departments[0],
             committees: committees[0]
         })
+        
     } catch (error) {
         console.error('Error fetching college info:', error);
         res.status(500).json({ error: 'Internal Server Error' });
