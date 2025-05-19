@@ -15,7 +15,7 @@ const getFacilities = async (req, res) => {
         if (fs.existsSync(facilityFolder)) {
           const files = fs.readdirSync(facilityFolder);
           images = files.map((file) => {
-            return facilityFolder + "\\" + file;
+            return  "uploads/" + "facility/" + facility.name.toLowerCase().split(" ").join("_") + "/" + file;
           })
         }
         return {...facility, images};

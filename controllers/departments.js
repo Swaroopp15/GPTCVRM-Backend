@@ -28,7 +28,7 @@ const getDepartment = async (req, res) => {
 
 // Add a new department
 const addDepartment = async (req, res) => {
-  const { depo_code, department_name, vision, mission } = req.body;
+  const { depo_code, department_name, vision, mission, avg_pass } = req.body;
   console.log(req.body);
   
   try {
@@ -36,7 +36,8 @@ const addDepartment = async (req, res) => {
       depo_code,
       department_name,
       vision,
-      mission
+      mission,
+      avg_pass
     ]);
     res.json({ message: "Department added successfully" });
   } catch (error) {
@@ -47,12 +48,13 @@ const addDepartment = async (req, res) => {
 // Update department details
 const updateDepartment = async (req, res) => {
   const { depo_code } = req.params;
-  const { department_name, vision, mission } = req.body;
+  const { department_name, vision, mission, avg_pass } = req.body;
   try {
     await db.execute(queries.updateDepartment, [
       department_name,department_name,department_name,
       vision,vision,vision,
       mission,mission,mission,
+      avg_pass, avg_pass, avg_pass,
       depo_code,
     ]);
     res.json({ message: "Department updated successfully" });
