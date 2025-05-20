@@ -13,6 +13,7 @@ const eventRouter = require('./routes/events');
 const notificationRouter = require('./routes/notifications');
 const facilityRoutes = require('./routes/facility');
 const authRoutes = require('./routes/auth');
+const libraryRoutes = require('./routes/library');
 const session = require('express-session');
 const fileUpload = require('express-fileupload');
 
@@ -48,6 +49,7 @@ app.use('/admissions', admissionsRouter);
 app.use("/events", eventRouter);
 app.use("/notifications", notificationRouter);
 app.use("/facility", facilityRoutes)
+app.use("/library", libraryRoutes);
 // Authentication routes
 app.use('/auth', authRoutes);
 
