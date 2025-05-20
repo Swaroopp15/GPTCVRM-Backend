@@ -3,11 +3,11 @@ const setInfo = 'UPDATE college_info SET info_value = ? WHERE info_key = ?';
 const addInfo = 'INSERT INTO college_info (info_key, info_value) VALUES (?, ?)';
 
 // faculty based queries
-const addFaculty = 'INSERT INTO faculty (faculty_name, email, faculty_role, depo_code, image_name) VALUES (?, ?, ?, ?, ?)';
+const addFaculty = 'INSERT INTO faculty (faculty_name, email, faculty_role, depo_code, number, qualification, image_name) VALUES (?, ?, ?, ?, ?, ?, ?)';
 const deleteFaculty = 'DELETE FROM faculty WHERE faculty_id = ?';
 const getFacultyById = 'SELECT * FROM faculty WHERE faculty_id = ?' ;
 const getAllFaculty = 'SELECT * FROM faculty WHERE depo_code = ?' ;
-const updateFaculty = 'UPDATE faculty SET faculty_name = ?, email = ?, faculty_role = ?, depo_code = ?, image_name = ? WHERE faculty_id = ?';
+const updateFaculty = 'UPDATE faculty SET faculty_name = ?, email = ?, faculty_role = ?, number = ?, qualification = ?, depo_code = ?, image_name = ? WHERE faculty_id = ?';
 
 // Admissions queries
 const getAdmissions = "SELECT year,JSON_ARRAYAGG(JSON_OBJECT('depo_code', depo_code,'intake', intake,'allocated', allocated )) AS admissions FROM admissions WHERE year BETWEEN YEAR(CURDATE()) - 10 AND YEAR(CURDATE()) GROUP BY year ORDER BY year DESC;"
@@ -37,7 +37,7 @@ const updateLab = 'UPDATE labs SET lab_name = ?, description = ?, capacity = ?, 
 // Committees queries
 const getCommitteeNames = 'SELECT committee_name AS name, id FROM committees';
 const getCommitteeInfo = "SELECT c.id,c.committee_name AS committee_name,c.about,JSON_ARRAYAGG(JSON_OBJECT('faculty_id', f.faculty_id,'name', f.faculty_name,'email', f.email,'number', f.number,'image_name', f.image_name ,'depo_code', f.depo_code,'role', cm.role)) AS members FROM committees c LEFT JOIN committee_members cm ON c.id = cm.committee_id LEFT JOIN faculty f ON cm.faculty_id = f.faculty_id WHERE c.id = ? GROUP BY c.id;";
-const getAvailableFaculty = "SELECT * FROM faculty where faculty.faculty_id NOT IN (SELECT faculty_id FROM committee_members);"
+const getAvailableFaculty = "SELECT * FROM faculty;"
 const addCommittee = 'INSERT INTO committees (committee_name, about) VALUES (?, ?)';
 const addCommitteeMember = 'INSERT INTO committee_members (committee_id, faculty_id, role) VALUES (?, ?, ?)';
 const deleteCommittee = 'DELETE FROM committees WHERE id = ?';
@@ -65,7 +65,7 @@ const addUser = "INSERT INTO users (email, password, name, role) VALUES(?, ?, ?,
 const addFacility = "INSERT INTO facilities (name, about) VALUES (?, ?)";
 const getFacilities = "SELECT * FROM facilities";
 const deleteFacility = "DELETE FROM facilities WHERE id = ?";
-const updateFacility = "UPDATE facilities SET ? = ? WHERE id = ?";
+const updateFacility = "UPDATE facilities SET name = ? , about = ? WHERE id = ?";
 
 
 module.exports = {

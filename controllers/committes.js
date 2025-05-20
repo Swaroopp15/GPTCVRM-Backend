@@ -17,12 +17,14 @@ const getCommitteeInfo = async (req, res) => {
     const {id} = req.params;
     const committeeInfo = await db.query(queries.getCommitteeInfo, [id]);
     const faculties = committeeInfo[0][0].members.map(faculty => {
+      if (!faculty.name) return;
+
           const facultyImageFolderPath = path.join(
             process.cwd(),
             "public",
             "uploads",
             "faculty",
-            faculty.image_name
+            faculty.image_name || faculty.email
           );
     
           let image = null;

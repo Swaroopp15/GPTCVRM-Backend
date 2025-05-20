@@ -31,15 +31,11 @@ const register = async (req, res) => {
 const login = async (req, res) => {
   try{
     const {email, password} = req.body;
-    // Check if user exists
-    console.log(req.body);
-    
+    // Check if user exists   
     const [user] = await db.query(queries.getUser, [email]);
     if (user.length === 0) {
       return res.status(400).json({ message: 'Invalid email or password' });
     }
-    console.log(user);
-    
     // Compare the password with the hashed password in the database
     const isMatch = await bcrypt.compare(password, user[0].password);
     if (!isMatch) {
@@ -56,7 +52,7 @@ const login = async (req, res) => {
   }
 }
 
-const isLoggedIn = async (req, res) => {
+const isLoggedIn = async (req, res) => { 
   if (req.session.user) {
     return res.status(200).json({ loggedIn: true });
   } else {

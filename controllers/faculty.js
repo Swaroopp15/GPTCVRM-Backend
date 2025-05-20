@@ -52,7 +52,7 @@ const getFacultyById = async (req, res) => {
 
 // Add a new faculty member
 const addFaculty = async (req, res) => {
-  const { faculty_name, email, faculty_role, depo_code } = req.body;
+  const { faculty_name, email, faculty_role, depo_code, number, qualification } = req.body;
   try {
     const image_name = email;
     await db.execute(queries.addFaculty, [
@@ -60,11 +60,22 @@ const addFaculty = async (req, res) => {
       email,
       faculty_role,
       depo_code,
+      number,
+      qualification,
       image_name,
     ]);
+    const folder = path.join(process.cwd(), "public", "uploads", "faculty", image_name);
+    if(!fs.existsSync(folder)) {
+      fs.mkdirSync(folder, {recursive: true});
+    }
+    req.files.image.mv(path.join(folder, req.files.image.name), (err) => {
+      if (!err) return 
+      console.log("Error occured in storing image");
+      
+    })
     res.status(201).json({ message: "Faculty added successfully" });
   } catch (error) {
-    console.log(error);
+    console.log("Error in adding a new faculty : ",error);
 
     res.status(500).json({ message: "Error adding faculty", error });
   }
@@ -73,19 +84,24 @@ const addFaculty = async (req, res) => {
 // Update faculty details
 const updateFaculty = async (req, res) => {
   const { id } = req.params;
-  const { faculty_name, email, faculty_role, depo_code, image_name } = req.body;
+  const { faculty_name, email, faculty_role, depo_code, image_name, number, qualification } = req.body;
   try {
     const [rows] = await db.execute(queries.getFacultyById, [id]);
     await db.execute(queries.updateFaculty, [
       faculty_name || rows[0].faculty_name,
       email || rows[0].email,
       faculty_role || rows[0].faculty_role,
+      number || rows[0].number,
+      qualification || rows[0].qualification,
       depo_code || rows[0].depo_code,
       image_name || rows[0].image_name,
+
       id,
     ]);
     res.json({ message: "Faculty updated successfully" });
   } catch (error) {
+    console.log("error in updating faculty : ", error);
+    
     res.status(500).json({ message: "Error updating faculty", error });
   }
 };
