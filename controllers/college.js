@@ -1,5 +1,7 @@
 const db = require('../database/db');
 const queries = require('../database/queries');
+const path = require('path');
+const fs = require('fs')
 
 // Generic function to fetch data based on key
 const getInfo = async (key) => {
@@ -11,6 +13,30 @@ const getInfo = async (key) => {
         return null;
     }
 };
+
+const addImage = async (req, res) => {
+    try {
+        const image = req.files.image;
+        const {key} = req.body;
+        let imagePath = path.join(process.cwd(), "public", "uploads", "college");
+        if(!fs.existsSync(imagePath)) {
+            fs.mkdirSync(imagePath, {recursive: true});
+        }
+        const imageName = key + path.extname(image.name)
+        imagePath = path.join(imagePath, imageName);
+        image.mv(imagePath, (err) => {
+            if (!err) return;
+            console.log("Error in uploading image to storage : ", err);
+            return res.status(400).send({message: "Error in uploading image to storage", error : err});
+        });
+        imagePath = "uploads/college/" + imageName
+        const result = await db.execute(queries.addInfo, [key, imagePath]);
+        res.send({message: "Image uploaded successfully"})
+    }catch (error) {
+        console.log("ERROR IN UPLOADING IMAGE : ", error);
+        res.status(500).send({message: "Error in uploading image", error});
+    }
+}
 
 // Controller function to handle college info request
 const getCollegeInfo = async (req, res) => {
@@ -51,4 +77,4 @@ const setInfo = async (req, res) => {
     }
 }
 
-module.exports = { getCollegeInfo, setInfo, addInfo };
+module.exports = { getCollegeInfo, setInfo, addInfo, addImage };
