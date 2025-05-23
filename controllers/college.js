@@ -43,7 +43,8 @@ const getCollegeInfo = async (req, res) => {
     try {
         const result = await db.execute('SELECT * FROM college_info');
         const departments = await db.execute(queries.getAllDepartments);
-        const committees = await db.execute(queries.getCommitteeNames);        
+        const committees = await db.execute(queries.getCommitteeNames);  
+              
         res.json({college: result[0],
             departments: departments[0],
             committees: committees[0]

@@ -7,10 +7,12 @@ const getLibrary = async (req, res) => {
     const overview = await db.query(queries.getOverview);
     const books = await db.query(queries.getBooks);
     const journals = await db.query(queries.getJournals);
+    const ebooks = await db.query("SELECT * FROM ebooks")  
     const data = {
       library : overview[0],
       books: books[0],
-      journals: journals[0]
+      journals: journals[0],
+      ebooks : ebooks[0]
     }
     res.json(data);
   } catch (error) {
