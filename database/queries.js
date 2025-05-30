@@ -68,11 +68,18 @@ const deleteFacility = "DELETE FROM facilities WHERE id = ?";
 const updateFacility = "UPDATE facilities SET name = ? , about = ? WHERE id = ?";
 
 // Library queries
-const getJournals = "SELECT * FROM library WHERE type = 'journal'";
-const getBooks = "SELECT * FROM library WHERE type = 'book'";
-const getOverview = "SELECT SUM(CASE WHEN type = 'book' THEN volumes ELSE 0 END) AS total_volumes, COUNT(CASE WHEN type = 'book' THEN id END) AS total_titles, COUNT(CASE WHEN type = 'journal' THEN id END) AS total_journal FROM library";
-const addLibraryItem = "INSERT INTO library(title, author, volumes, type) VALUES (?, ?, ?, ?)";
-const deleteItem = "DELETE FROM library WHERE id = ?"
+const getJournals = "SELECT * FROM `library` WHERE type = 'journal'";
+const getBooks = "SELECT * FROM `library` WHERE type = 'book'";
+const getOverview = `
+  SELECT 
+    SUM(CASE WHEN type = 'book' THEN volumes ELSE 0 END) AS total_volumes, 
+    COUNT(CASE WHEN type = 'book' THEN id END) AS total_titles, 
+    COUNT(CASE WHEN type = 'journal' THEN id END) AS total_journal 
+  FROM \`library\`
+`;
+const addLibraryItem = "INSERT INTO `library` (title, author, volumes, type) VALUES (?, ?, ?, ?)";
+const deleteItem = "DELETE FROM `library` WHERE id = ?";
+
 
 module.exports = {
   addDepartment,
