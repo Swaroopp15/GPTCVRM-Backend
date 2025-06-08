@@ -8,7 +8,7 @@ router.get('/get-years', getAvailableYears);
 router.post('/', addResult);
 router.delete('/:id', deleteResult);
 router.get('/search',searchResult);
-router.post('/bulk', addBulkResults); // 👈 NEW
+router.post('/bulk', addBulkResults);
 
 
 
