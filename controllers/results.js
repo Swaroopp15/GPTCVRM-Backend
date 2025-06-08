@@ -74,4 +74,36 @@ const searchResult = async (req, res) => {
   }
 }
 
-module.exports = { getAllResults, addResult, deleteResult, getAvailableYears, searchResult };
+const addBulkResults = async (req, res) => {
+  const results = req.body;
+
+  if (!Array.isArray(results) || results.length === 0) {
+    return res.status(400).json({ message: "Invalid data. Expected an array of result records." });
+  }
+
+  try {
+    const placeholders = results.map(() => "(?, ?, ?, ?, ?, ?)").join(", ");
+    const values = results.flatMap(result => [
+      result.pin,
+      result.name,
+      result.application_id,
+      result.percentage,
+      result.year,
+      result.depo_code
+    ]);
+
+    const sql = `
+      INSERT INTO results (pin, name, application_id, percentage, year, depo_code)
+      VALUES ${placeholders}
+    `;
+
+    await db.execute(sql, values);
+
+    res.status(201).json({ message: "Bulk results added successfully." });
+  } catch (error) {
+    console.error("Error at bulk adding results:", error);
+    res.status(500).json({ message: "Error adding bulk results", error });
+  }
+};
+
+module.exports = { getAllResults, addResult, deleteResult, getAvailableYears, searchResult,addBulkResults, getAvailableDepartments };
