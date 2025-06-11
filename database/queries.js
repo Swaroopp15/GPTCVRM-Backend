@@ -80,6 +80,12 @@ const getOverview = `
 const addLibraryItem = "INSERT INTO `library` (title, author, volumes, type) VALUES (?, ?, ?, ?)";
 const deleteItem = "DELETE FROM `library` WHERE id = ?";
 
+// Ebook queries 
+const addEbook = "INSERT INTO ebooks (title, author, link) VALUES (?, ?, ?)";
+const getEbookById = "SELECT * FROM ebooks WHERE id = ?";
+const deleteEbook = "DELETE FROM ebooks WHERE id = ?";
+const updateEbook = "UPDATE ebooks SET title = ?, author = ?, ebook_path = ? WHERE id = ?";
+
 
 module.exports = {
   addDepartment,
@@ -133,5 +139,9 @@ module.exports = {
   getJournals,
   addLibraryItem,
   deleteItem,
-  getOverview
+  getOverview,
+  addEbook,
+  getEbookById,
+  deleteEbook,
+  updateEbook
 }

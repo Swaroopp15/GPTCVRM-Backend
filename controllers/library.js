@@ -34,7 +34,7 @@ const addLibrary = async (req, res) => {
 
 const deleteLibrary = async (req, res) => {
   try {
-    const {id} = req.body;
+    const {id} = req.params;
     const data = await db.query(queries.deleteItem, [id]);
     res.send({message: "Book Deleted Successful"})
   } catch (error) {
@@ -43,8 +43,20 @@ const deleteLibrary = async (req, res) => {
   }
 }
 
+const updateBook = async (req, res) => {
+  try {
+    const {id, title, author, volume} = req.body;
+    const data = await db.query("UPDATE `library` SET title = ?, author = ?, volumes = ? WHERE id = ?", [title, author, volume, id]);
+    res.send({message: "Book Updated Successful"})
+  } catch (error) {
+    console.log("Error in updating library item : ", error);
+    res.status(500).send({message: "error in updating library item", error});    
+  }
+}
+
 module.exports = {
   getLibrary,
   addLibrary,
-  deleteLibrary
+  deleteLibrary,
+  updateBook
 }
