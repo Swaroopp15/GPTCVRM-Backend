@@ -1,5 +1,5 @@
 const express = require('express');
-const { getAllPlacements, addPlacement, deletePlacement, getPlacements, getPlacementYears, getAllPlacement } = require('../controllers/placements');
+const { getAllPlacements, addPlacement, deletePlacement, getPlacements, getPlacementYears, getAllPlacement,addPlacementsBulk } = require('../controllers/placements');
 
 const router = express.Router();
 
@@ -9,5 +9,6 @@ router.get('/years', getPlacementYears);
 router.get("/:depo_code/:year", getPlacements);
 router.post('/', addPlacement);
 router.delete('/:id', deletePlacement);
+router.post('/bulk', addPlacementsBulk);
 
 module.exports = router;

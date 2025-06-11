@@ -84,6 +84,38 @@ const getAllPlacement = async (req, res) => {
 
 };
 
+const addPlacementsBulk = async (req, res) => {
+  const placements = req.body;
+
+  if (!Array.isArray(placements) || placements.length === 0) {
+    return res.status(400).json({ error: "No placement data provided." });
+  }
+
+  const values = placements.map(p => [
+    p.name,
+    p.company,
+    p.package,
+    p.year || new Date().getFullYear(),
+    p.role,
+    p.pin,
+    p.depo_code
+  ]);
+
+  try {
+    const [result] = await db.query(
+      `INSERT INTO placements (name, company, package, year, role, student_pin, depo_code) 
+       VALUES ?`, 
+      [values]
+    );
+
+    res.json({ message: "Bulk placements uploaded", insertedCount: result.affectedRows });
+  } catch (error) {
+    console.error("Bulk insert error:", error);
+    res.status(500).json({ error: "Error uploading bulk placements" });
+  }
+};
+
+
 module.exports = {
   getAllPlacements,
   addPlacement,
@@ -91,4 +123,5 @@ module.exports = {
   getPlacements,
   getPlacementYears,
   getAllPlacement,
+  addPlacementsBulk,
 };
