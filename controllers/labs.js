@@ -14,15 +14,26 @@ const addLabs = async (req, res) => {
     conducted_labs,
     specifications,
     budget,
-    category,
-    subfolder,
   } = req.body;
 
-  const image_name =
-    category.toLowerCase().replace(" ", "_") +
-    "/" +
-    subfolder.toLowerCase().replace(" ", "_");
+  const image_name = "labs/" + lab_name.toLowerCase().split(" ").join("_");
   try {
+    // const images = req.files.lab_images;
+    const imagePath = path.join(process.cwd(), "public", "uploads", image_name);
+    if (!fs.existsSync(imagePath)) {
+      fs.mkdirSync(imagePath, { recursive: true });
+    }
+    const eventImages = Array.isArray(req.files.lab_images)
+      ? req.files.lab_images
+      : [req.files.lab_images];
+    eventImages.forEach((image) => {
+      const pathh = path.join(imagePath, image.name);
+      image.mv(pathh, (err) => {
+        if (!err) return;
+        console.log("Error in saving event image : ", err);
+      });
+    });
+
     await db.query(queries.addLab, [
       depo_code,
       lab_name,
@@ -97,14 +108,10 @@ const updateLab = async (req, res) => {
       depo_code,
       capacity,
       equipment,
-      category,
-      subfolder,
     } = req.body;
-    const image_name =
-      category.toLowerCase().replace(" ", "_") +
-      "/" +
-      subfolder.toLowerCase().replace(" ", "_");
-    const lab = await db.query(queries.getLabById, [id]);
+    const [lab] = await db.query(queries.getLabById, [id]);
+    const image_name = lab[0].image_name;
+    
     if (lab.length === 0) {
       return res.status(404).json({ message: "Lab not found" });
     }
@@ -114,7 +121,7 @@ const updateLab = async (req, res) => {
       capacity || lab[0].capacity,
       equipment || lab[0].equipment,
       depo_code || lab[0].depo_code,
-      image_name || lab[0].image_name,
+      image_name,
       id,
     ]);
     if (result.affectedRows === 0) {
