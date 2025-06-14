@@ -86,6 +86,16 @@ const getEbookById = "SELECT * FROM ebooks WHERE id = ?";
 const deleteEbook = "DELETE FROM ebooks WHERE id = ?";
 const updateEbook = "UPDATE ebooks SET title = ?, author = ?, ebook_path = ? WHERE id = ?";
 
+// Students queries
+const addStudent = "INSERT INTO students (name, pin, admission_year, semester, depo_code) VALUES (?, ?, ?, ?, ?)";
+const getAvailableAdmissionYears = "SELECT DISTINCT admission_year FROM students WHERE depo_code = ? ORDER BY admission_year DESC";
+// const getStudents = "SELECT * FROM students WHERE admission_year = ? AND depo_code = ?";
+const getStudentsBySem = "SELECT * FROM students WHERE depo_code = ? AND semester = ? ORDER BY pin ASC";
+const getStudentsForResults = "SELECT s.pin FROM students s LEFT JOIN results r ON s.id = r.student_id WHERE r.id IS NULL AND s.admission_year = ? AND  s.depo_code = ? ORDER BY pin ASC";
+const getStudentsForPlacements = "SELECT s.pin FROM students s LEFT JOIN placements p ON s.id = p.student_id WHERE p.id IS NULL AND  s.admission_year = ? AND  s.depo_code = ? ORDER BY pin ASC";
+const deleteStudent = "DELETE FROM students WHERE pin = ?";
+const updateStudent = "UPDATE students SET name = CASE WHEN ? IS NOT NULL AND ? != '' THEN ? ELSE name END, pin = CASE WHEN ? IS NOT NULL AND ? != '' THEN ? ELSE pin END, admission_year = CASE WHEN ? IS NOT NULL AND ? != '' THEN ? ELSE admission_year END, semester = CASE WHEN ? IS NOT NULL AND ? != '' THEN ? ELSE semester END, depo_code = CASE WHEN ? IS NOT NULL AND ? != '' THEN ? ELSE depo_code END WHERE pin = ?";
+
 
 module.exports = {
   addDepartment,
@@ -143,5 +153,12 @@ module.exports = {
   addEbook,
   getEbookById,
   deleteEbook,
-  updateEbook
+  updateEbook,
+  getStudentsBySem,
+  getStudentsForPlacements,
+  getStudentsForResults,
+  getAvailableAdmissionYears,
+  addStudent,
+  deleteStudent,
+  updateStudent
 }

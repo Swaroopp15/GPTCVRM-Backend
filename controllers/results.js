@@ -43,17 +43,28 @@ const getAvailableYears = async (req, res) => {
 //   }
 // } 
 
-const addResult = async (req, res) => {
-  const { pin, application_id, percentage, year} = req.body;
-  try {
+const addResultRecord = async(pin, application_id, percentage, year) => {
+  try{
     const [student] = await db.execute("SELECT id FROM students WHERE pin = ?", [pin]);
     if (student.length === 0) {
-      return res.status(404).json({ message: "Student not found" });
+      throw new Error("Student not found");
     }
     await db.execute(
       "INSERT INTO `results` (student_id, application_id, passed_year, percentage) VALUES (?, ?, ?, ?);",
       [student[0].id, application_id, year, percentage]
     );
+    return true;
+  }
+  catch (error) {
+    console.log("Error at adding result record : ", error);
+    return false;
+}
+}
+
+const addResult = async (req, res) => {
+  const { pin, application_id, percentage, year} = req.body;
+  try {
+    addResultRecord(pin, application_id, percentage, year);
     res.json({ message: "Result record added successfully" });
   } catch (error) {
     res.status(500).json({ message: "Error adding result record", error });
@@ -86,80 +97,107 @@ const searchResult = async (req, res) => {
   }
 }
 
+// const addBulkResults = async (req, res) => {
+//   const results = req.body;
+
+//   if (!Array.isArray(results) || results.length === 0) {
+//     return res.status(400).json({ message: "Invalid data. Expected an array of result records." });
+//   }
+
+//   const connection = await db.getConnection(); // Transaction-safe connection
+
+//   try {
+//     await connection.beginTransaction();
+
+//     for (const result of results) {
+//       const {
+//         pin,
+//         name,
+//         application_id,
+//         percentage,
+//         year,
+//         depo_code,
+//         admission_year
+//       } = result;
+
+//       // Step 1: Find student
+//       const [students] = await connection.execute(
+//         "SELECT id FROM students WHERE pin = ?",
+//         [pin]
+//       );
+
+//       let studentId;
+
+//       if (students.length > 0) {
+//         studentId = students[0].id;
+//       } else {
+//         // Insert new student
+//         const [insertStudent] = await connection.execute(
+//           "INSERT INTO students (pin, name, admission_year, depo_code) VALUES (?, ?, ?, ?)",
+//           [pin, name, admission_year || year, depo_code]
+//         );
+//         studentId = insertStudent.insertId;
+//       }
+
+//       // Step 2: Check if result for this student + application_id already exists
+//       const [existingResults] = await connection.execute(
+//         "SELECT id FROM results WHERE student_id = ? AND application_id = ?",
+//         [studentId, application_id]
+//       );
+
+//       if (existingResults.length > 0) {
+//         // UPDATE existing result
+//         await connection.execute(
+//           "UPDATE results SET percentage = ?, passed_year = ? WHERE student_id = ? AND application_id = ?",
+//           [percentage, year, studentId, application_id]
+//         );
+//       } else {
+//         // INSERT new result
+//         await connection.execute(
+//           "INSERT INTO results (student_id, application_id, percentage, passed_year) VALUES (?, ?, ?, ?)",
+//           [studentId, application_id, percentage, year]
+//         );
+//       }
+//     }
+
+//     await connection.commit();
+//     connection.release();
+
+//     res.status(201).json({ message: "Bulk results inserted/updated successfully." });
+//   } catch (error) {
+//     await connection.rollback();
+//     connection.release();
+//     console.error("Error at bulk add/update results:", error);
+//     res.status(500).json({ message: "Error adding or updating bulk results", error });
+//   }
+// };
+
 const addBulkResults = async (req, res) => {
-  const results = req.body;
-
-  if (!Array.isArray(results) || results.length === 0) {
-    return res.status(400).json({ message: "Invalid data. Expected an array of result records." });
-  }
-
-  const connection = await db.getConnection(); // Transaction-safe connection
-
   try {
-    await connection.beginTransaction();
-
-    for (const result of results) {
-      const {
-        pin,
-        name,
-        application_id,
-        percentage,
-        year,
-        depo_code,
-        admission_year
-      } = result;
-
-      // Step 1: Find student
-      const [students] = await connection.execute(
-        "SELECT id FROM students WHERE pin = ?",
-        [pin]
-      );
-
-      let studentId;
-
-      if (students.length > 0) {
-        studentId = students[0].id;
-      } else {
-        // Insert new student
-        const [insertStudent] = await connection.execute(
-          "INSERT INTO students (pin, name, admission_year, depo_code) VALUES (?, ?, ?, ?)",
-          [pin, name, admission_year || year, depo_code]
-        );
-        studentId = insertStudent.insertId;
+    const results = req.body;
+    console.log(results);
+    
+    const response = {};
+    if (!Array.isArray(results) || results.length === 0) {
+      return res.status(400).json({ message: "Invalid data. Expected an array of result records." });
+    }
+    results.forEach(result => {
+      const { pin, application_id, percentage, year } = result;
+      if (!pin || !application_id || !percentage || !year) {
+        throw new Error("All fields are required for each result record");
       }
-
-      // Step 2: Check if result for this student + application_id already exists
-      const [existingResults] = await connection.execute(
-        "SELECT id FROM results WHERE student_id = ? AND application_id = ?",
-        [studentId, application_id]
-      );
-
-      if (existingResults.length > 0) {
-        // UPDATE existing result
-        await connection.execute(
-          "UPDATE results SET percentage = ?, passed_year = ? WHERE student_id = ? AND application_id = ?",
-          [percentage, year, studentId, application_id]
-        );
-      } else {
-        // INSERT new result
-        await connection.execute(
-          "INSERT INTO results (student_id, application_id, percentage, passed_year) VALUES (?, ?, ?, ?)",
-          [studentId, application_id, percentage, year]
-        );
+      const status = addResultRecord(pin, application_id, percentage, year);
+      if (!status) {
+        response[pin] = status;
       }
     }
-
-    await connection.commit();
-    connection.release();
-
-    res.status(201).json({ message: "Bulk results inserted/updated successfully." });
+  )
+  res.status(201).json({ message: "Bulk results added successfully, failed pins are forwarded", response });
   } catch (error) {
-    await connection.rollback();
-    connection.release();
-    console.error("Error at bulk add/update results:", error);
-    res.status(500).json({ message: "Error adding or updating bulk results", error });
+    console.log("Error at adding bulk results : ", error);
+    res.status(500).json({ message: "Error adding bulk results", error });
   }
-};
+}
 
 
 module.exports = { getAllResults, addResult, deleteResult, getAvailableYears, searchResult,addBulkResults, 

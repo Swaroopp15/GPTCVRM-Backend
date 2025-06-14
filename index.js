@@ -15,6 +15,7 @@ const facilityRoutes = require('./routes/facility');
 const authRoutes = require('./routes/auth');
 const libraryRoutes = require('./routes/library');
 const ebookRouter = require('./routes/ebook');
+const studentRouter = require('./routes/students');
 const session = require('express-session');
 const fileUpload = require('express-fileupload');
 
@@ -52,6 +53,7 @@ app.use("/notifications", notificationRouter);
 app.use("/facility", facilityRoutes)
 app.use("/library", libraryRoutes);
 app.use("/ebook", ebookRouter);
+app.use('/students', studentRouter);
 // Authentication routes
 app.use('/auth', authRoutes);
 
