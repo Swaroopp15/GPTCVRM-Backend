@@ -6,7 +6,7 @@ const router = express.Router();
 router.get('/get-results', getAllResults);
 router.get('/get-years', getAvailableYears);
 router.post('/', addResult);
-router.delete('/:id', deleteResult);
+router.delete('/:student_id', deleteResult);
 router.get('/search',searchResult);
 router.post('/bulk', addBulkResults);
 

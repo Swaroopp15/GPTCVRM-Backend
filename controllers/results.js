@@ -75,10 +75,9 @@ const addResult = async (req, res) => {
 
 // Delete a result record
 const deleteResult = async (req, res) => {
-  const { pin } = req.params;
+  const { student_id } = req.params;
   try {
-    const [student] = await db.execute("SELECT id FROM students WHERE pin = ?", [pin]);
-    await db.execute("DELETE FROM results WHERE id = ?", [student[0].id]);
+    await db.execute("DELETE FROM results WHERE student_id = ?", [student_id]);
     res.json({ message: "Result record deleted successfully" });
   } catch (error) {
     res.status(500).json({ message: "Error deleting result record", error });
