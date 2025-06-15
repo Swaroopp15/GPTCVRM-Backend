@@ -15,6 +15,20 @@ const getStudents = async (req, res) => {
   }
 }
 
+const getStudentsByYear = async (req, res) => {
+  try {
+    const {depo_code,year} = req.query;
+    if (!year && !depo_code) {
+      return res.status(400).json({ error: "depo_code and year is required" });
+    }
+    const [students] = await db.execute(queries.getStudents, [year, depo_code]);
+    res.status(200).json(students);
+  } catch (error) {
+    console.log("Error in getting students by year : ", error);
+    res.status(500).send({message: "Error in getting students by year", error});
+  }
+}
+
 const getAdmissionYears = async (req, res) => {
   try {
     const {depo_code} = req.query;
@@ -60,19 +74,26 @@ const studentsForResults = async (req, res) => {
 }
 
 const addStudentsBulk = async (req, res) => {
-  const { students } = req.body;
+  const students = req.body;
   if (!students || !Array.isArray(students)) {
     return res.status(400).json({ error: "students must be an array" });
   }
+  
   try {
-    const promises = students.map(student => {
-      const { name, pin, admission_year, semester, depo_code } = student;
-      if (!name || !pin || !admission_year || !semester || !depo_code) {
-        throw new Error("All fields are required for each student");
+    students.map(async student => {
+      try {
+        
+        const { name, pin, admission_year, semester, depo_code } = student;
+        if (!name || !pin || !admission_year || !semester || !depo_code) {
+          throw new Error("All fields are required for each student");
+        }
+        return await db.execute(queries.addStudent, [name, pin, admission_year, semester, depo_code]);
+      } catch (error) {
+        console.log("Student data already existed");
+        
       }
-      return db.execute(queries.addStudent, [name, pin, admission_year, semester, depo_code]);
     });
-    await Promise.all(promises);
+    // await Promise.all(promises);
     res.status(201).json({ message: "Students added successfully" });
   } catch (error) {
     console.log("Error in adding students in bulk : ", error);
@@ -83,11 +104,13 @@ const addStudentsBulk = async (req, res) => {
 
 const studentsForPlacements = async (req, res) => {
   const { admission_year, depo_code } = req.query;
+
   if (!admission_year || !depo_code) {
     return res.status(400).json({ error: "admission_year and depo_code are required" });
   }
   try {
     const [students] = await db.execute(queries.getStudentsForPlacements, [admission_year, depo_code]);
+
     res.status(200).json(students);
   } catch (error) {
     console.log("Error in getting students for placements : ", error);
@@ -126,5 +149,6 @@ module.exports = {
   studentsForPlacements,
   deleteStudent,
   updateStudent,
-  addStudentsBulk
+  addStudentsBulk,
+  getStudentsByYear
 }

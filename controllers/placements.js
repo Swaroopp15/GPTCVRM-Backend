@@ -18,9 +18,11 @@ const getPlacementYears = async (req, res) => {
       return res.status(400).json({ error: "Depo code is required" });
     }
     const [rows] = await db.execute(queries.getPlacementYears, [depo_code]);
-    res.json({ years: rows });
+    const years = rows.map((year) => year.placement_year);
+    res.json(years);
   } catch (error) {
-    res.status(500).json({ error: "Error fetching placement years" });
+    console.log("Error fetching placement years:", error);
+    res.status(500).json({ message: "Error fetching placement years", error });
   }
 };
 
@@ -40,20 +42,24 @@ const getPlacements = async (req, res) => {
 };
 
 const addPlacement = async (req, res) => {
-  const { name, company, package, year, role, pin, depo_code } = req.body;
+  const { company, package, placement_year, role, pin } = req.body;
   try {
+    const [student] = await db.execute("SELECT id FROM students WHERE pin = ?", [pin]);
+    if (student.length === 0) {
+      return res.status(404).json({ error: "Student not found" });
+    }
+    console.log(student);
+    
     await db.execute(queries.addPlacement, [
-      name,
+      student[0].id,
       company,
       package,
-      year,
+      placement_year,
       role,
-      pin,
-      depo_code
     ]);
     res.json({ message: "Placement record added successfully" });
   } catch (error) {
-    console.log(error);
+    console.log("error in adding placement record : ",error);
     res.status(500).json({ error: "Error adding placement record" });
   }
 };
@@ -74,7 +80,7 @@ const deletePlacement = async (req, res) => {
 
 const getAllPlacement = async (req, res) => {
   try {
-    const [rows] = await db.execute("SELECT * FROM placements");
+    const [rows] = await db.execute("SELECT p.*, s.* FROM placements p   JOIN students s ON s.id = p.student_id");
     res.json(rows);
     // console.log(rows);
   } catch (error) {
@@ -91,23 +97,24 @@ const addPlacementsBulk = async (req, res) => {
     return res.status(400).json({ error: "No placement data provided." });
   }
 
-  const values = placements.map(p => [
-    p.name,
-    p.company,
-    p.package,
-    p.year || new Date().getFullYear(),
-    p.role,
-    p.pin,
-    p.depo_code
-  ]);
 
   try {
-    const [result] = await db.query(
-      `INSERT INTO placements (name, company, package, year, role, student_pin, depo_code) 
-       VALUES ?`, 
-      [values]
-    );
-
+    const [result] = placements.map(async placement => {
+      try {
+        // console.log("Placement data:", placement);
+        
+        const [student] = await db.execute("SELECT id FROM students WHERE pin = ?", [placement.pin]);
+        if (student.length === 0) {
+          console.log(`Student with pin ${placement.pin} not found`);
+      }
+      // console.log(student);
+      
+      await db.query(queries.addPlacement, [student[0].id, placement.company, placement.package, placement.year, placement.role]);  
+    } catch (error) {
+      console.log("Error processing placement data:", error);
+      return;
+    }
+    })
     res.json({ message: "Bulk placements uploaded", insertedCount: result.affectedRows });
   } catch (error) {
     console.error("Bulk insert error:", error);

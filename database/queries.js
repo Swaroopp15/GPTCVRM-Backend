@@ -21,11 +21,11 @@ const updateDepartment = "UPDATE departments SET  department_name = CASE WHEN ? 
 
 // placement based queries
 
-const addPlacement = 'INSERT INTO placements (name, company, package, year, role, student_pin, depo_code) VALUES (?, ?, ?, ?, ?, ?, ?)';
-const getPlacementYears = 'SELECT DISTINCT year FROM placements WHERE depo_code = ? ORDER BY year DESC';
-const getPlacements = 'SELECT * FROM placements WHERE year = ?';
-const getPlacementsByDepo_code = "SELECT * FROM placements WHERE depo_code = ? AND year= ?";
-const deletePlacement = 'DELETE FROM placements WHERE id = ?';
+const addPlacement = 'INSERT INTO placements (student_id, company, package, placement_year, role) VALUES (?, ?, ?, ?, ?)';
+const getPlacementYears = 'SELECT DISTINCT p.placement_year FROM placements p  JOIN students s ON s.id = p.student_id WHERE s.depo_code = ? ORDER BY placement_year DESC';
+const getPlacements = 'SELECT p.*, s.* FROM placements p   JOIN students s ON s.id = p.student_id WHERE p.placement_year = ?';
+const getPlacementsByDepo_code = "SELECT p.*, s.* FROM placements p   JOIN students s ON s.id = p.student_id WHERE s.depo_code = ? AND p.placement_year= ?";
+const deletePlacement = 'DELETE FROM placements WHERE student_id = ?';
 
 // Labs based queries
 const addLab = 'INSERT INTO `labs` (`depo_code`, `lab_name`, `description`, `capacity`, `equipment`,`conducted_labs`,`specifications`,`budget`, `image_name`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)';
@@ -89,7 +89,7 @@ const updateEbook = "UPDATE ebooks SET title = ?, author = ?, ebook_path = ? WHE
 // Students queries
 const addStudent = "INSERT INTO students (name, pin, admission_year, semester, depo_code) VALUES (?, ?, ?, ?, ?)";
 const getAvailableAdmissionYears = "SELECT DISTINCT admission_year FROM students WHERE depo_code = ? ORDER BY admission_year DESC";
-// const getStudents = "SELECT * FROM students WHERE admission_year = ? AND depo_code = ?";
+const getStudents = "SELECT * FROM students WHERE admission_year = ? AND depo_code = ?";
 const getStudentsBySem = "SELECT * FROM students WHERE depo_code = ? AND semester = ? ORDER BY pin ASC";
 const getStudentsForResults = "SELECT s.pin FROM students s LEFT JOIN results r ON s.id = r.student_id WHERE r.id IS NULL AND s.admission_year = ? AND  s.depo_code = ? ORDER BY pin ASC";
 const getStudentsForPlacements = "SELECT s.pin FROM students s LEFT JOIN placements p ON s.id = p.student_id WHERE p.id IS NULL AND  s.admission_year = ? AND  s.depo_code = ? ORDER BY pin ASC";
@@ -160,5 +160,6 @@ module.exports = {
   getAvailableAdmissionYears,
   addStudent,
   deleteStudent,
-  updateStudent
+  updateStudent,
+  getStudents,
 }

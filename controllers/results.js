@@ -175,28 +175,40 @@ const addBulkResults = async (req, res) => {
   try {
     const results = req.body;
     console.log(results);
-    
-    const response = {};
+
     if (!Array.isArray(results) || results.length === 0) {
       return res.status(400).json({ message: "Invalid data. Expected an array of result records." });
     }
-    results.forEach(result => {
+
+    const response = {};
+
+    for (const result of results) {
       const { pin, application_id, percentage, year } = result;
-      if (!pin || !application_id || !percentage || !year) {
-        throw new Error("All fields are required for each result record");
+
+      if (!pin || !application_id || percentage === undefined || !year) {
+        response[pin || "unknown"] = "Missing required fields";
+        continue;
       }
-      const status = addResultRecord(pin, application_id, percentage, year);
+
+      const newPercentage = percentage <= 1 ? percentage * 100 : percentage;
+
+      const status = await addResultRecord(pin, application_id, newPercentage, year);
+
       if (!status) {
-        response[pin] = status;
+        response[pin] = "Failed to add";
       }
     }
-  )
-  res.status(201).json({ message: "Bulk results added successfully, failed pins are forwarded", response });
+
+    res.status(201).json({
+      message: "Bulk results added. Some may have failed.",
+      failed: Object.keys(response).length > 0 ? response : null,
+    });
   } catch (error) {
-    console.log("Error at adding bulk results : ", error);
-    res.status(500).json({ message: "Error adding bulk results", error });
+    console.error("Error at adding bulk results:", error);
+    res.status(500).json({ message: "Error adding bulk results", error: error.message });
   }
-}
+};
+
 
 
 module.exports = { getAllResults, addResult, deleteResult, getAvailableYears, searchResult,addBulkResults, 
