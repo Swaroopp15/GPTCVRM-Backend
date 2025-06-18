@@ -84,9 +84,34 @@ const addFaculty = async (req, res) => {
 // Update faculty details
 const updateFaculty = async (req, res) => {
   const { id } = req.params;
-  const { faculty_name, email, faculty_role, depo_code, image_name, number, qualification } = req.body;
+  const { faculty_name, email, faculty_role, depo_code, number, qualification } = req.body;
   try {
+    const facultyimage = req.files?.image;
+    console.log("Updating faculty with ID:", id);
     const [rows] = await db.execute(queries.getFacultyById, [id]);
+    
+    const folder = path.join(process.cwd(), "public", "uploads", "faculty", email || rows[0].email);
+    if (facultyimage) {
+      if (!fs.existsSync(folder)) {
+        fs.mkdirSync(folder, { recursive: true });
+      }
+      else{
+        // If folder exists, delete existing files
+        const files = fs.readdirSync(folder);
+        for (const file of files) {
+          fs.unlinkSync(path.join(folder, file));
+        }
+      }
+      facultyimage.mv(path.join(folder, req.files.image.name), (err) =>
+        {
+          if (err) {
+            console.log("Error occured in storing image");
+            return
+          }
+          console.log("Image stored successfully"); 
+        }
+      );
+    }
     await db.execute(queries.updateFaculty, [
       faculty_name || rows[0].faculty_name,
       email || rows[0].email,
@@ -94,7 +119,7 @@ const updateFaculty = async (req, res) => {
       number || rows[0].number,
       qualification || rows[0].qualification,
       depo_code || rows[0].depo_code,
-      image_name || rows[0].image_name,
+      email || rows[0].email,
 
       id,
     ]);
