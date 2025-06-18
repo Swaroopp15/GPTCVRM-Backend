@@ -2,9 +2,10 @@ require('dotenv').config()
 const mysql = require('mysql2/promise');
 
 const db = mysql.createPool({
-    host: 'localhost',
+    host: process.env.DB_HOST,
     user: 'root',
-    password: process.env.DB_PASSWORD || 'jayanth@14',
+    port: process.env.DB_PORT || 8000,
+    password: process.env.DB_PASSWORD || 'Swaroop@15',
     database: 'gpt_cvrm',
     connectionLimit: 10
 });

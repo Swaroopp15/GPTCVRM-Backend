@@ -19,6 +19,7 @@ const studentRouter = require('./routes/students');
 const session = require('express-session');
 const fileUpload = require('express-fileupload');
 
+
 const app = express();
 app.use(cors({
   origin: 'http://localhost:5173',
