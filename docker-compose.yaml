@@ -1,5 +1,4 @@
 services:
-
   gpt-backend:
     build: .
     container_name: gpt-backend
@@ -7,26 +6,18 @@ services:
       - "8001:3000"
     restart: always
     env_file:
-      - .env             
-    networks:
-      - gpt-network
+      - .env
 
   gpt-db:
-    image: mysql:8.0
+    image: mysql:8.0 
     container_name: gpt-db
     restart: always
     env_file:
-      - stack.env             
+      - stack.env
     ports:
       - "8000:3306"
     volumes:
       - gpt_db_data:/var/lib/mysql
-    networks:
-      - gpt-network
 
 volumes:
   gpt_db_data:
-
-networks:
-  gpt-network:
-    driver: bridge
