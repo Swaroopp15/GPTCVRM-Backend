@@ -6,7 +6,8 @@ const db = mysql.createPool({
     user: 'root',
     password: process.env.DB_PASSWORD || 'jayanth@14',
     database: 'gpt_cvrm',
-    connectionLimit: 10
+    // connectionLimit: 10,
+    multipleStatements: true
 });
 
 module.exports = db;
