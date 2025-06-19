@@ -19,7 +19,9 @@ const studentRouter = require('./routes/students');
 const imagesRouter = require('./routes/images');
 const session = require('express-session');
 const fileUpload = require('express-fileupload');
+const setupDb = require('./database/setupDb');
 
+setupDb();
 
 const app = express();
 app.use(cors({

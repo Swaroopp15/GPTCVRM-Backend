@@ -18,6 +18,7 @@ services:
       - "8000:3306"
     volumes:
       - gpt_db_data:/var/lib/mysql
+      - ./dump:/docker-entrypoint-initdb.d
 
 volumes:
   gpt_db_data:

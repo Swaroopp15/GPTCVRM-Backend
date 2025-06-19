@@ -1,7 +1,8 @@
-FROM node
+FROM node:18
 WORKDIR /app
-COPY package.json /app
+COPY package.json package-lock.json* ./
 RUN npm install
-COPY . /app
+COPY . .
+COPY dump ./dump
 EXPOSE 3000
-CMD ["node","index.js"]
+CMD ["npm", "start"]

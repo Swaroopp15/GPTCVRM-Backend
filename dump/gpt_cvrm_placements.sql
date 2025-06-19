@@ -1,0 +1,57 @@
+-- MySQL dump 10.13  Distrib 8.0.41, for Win64 (x86_64)
+--
+-- Host: localhost    Database: gpt_cvrm
+-- ------------------------------------------------------
+-- Server version	8.0.41
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!50503 SET NAMES utf8 */;
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+--
+-- Table structure for table `placements`
+--
+
+DROP TABLE IF EXISTS `placements`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `placements` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `student_id` int NOT NULL,
+  `company` varchar(100) NOT NULL,
+  `package` double NOT NULL,
+  `role` varchar(50) DEFAULT NULL,
+  `placement_year` year DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `student_id` (`student_id`),
+  CONSTRAINT `placements_ibfk_1` FOREIGN KEY (`student_id`) REFERENCES `students` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=139 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `placements`
+--
+
+LOCK TABLES `placements` WRITE;
+/*!40000 ALTER TABLE `placements` DISABLE KEYS */;
+INSERT INTO `placements` VALUES (1,455,'EFFTRONICS PVT LTD',3.02,'Diploma Service Engineer',2024),(2,464,'DAIKIN',2.43,'Diploma Service Engineer',2024),(3,465,'DAIKIN',2.43,'Diploma Service Engineer',2024),(4,467,'DAIKIN',2.43,'Diploma Service Engineer',2024),(5,471,'DAIKIN',2.43,'Diploma Service Engineer',2024),(6,458,'DAIKIN',2.43,'Diploma Service Engineer',2024),(7,466,'DAIKIN',2.43,'Diploma Service Engineer',2024),(8,470,'DAIKIN',2.43,'Diploma Service Engineer',2024),(9,469,'DAIKIN',2.43,'Diploma Service Engineer',2024),(10,468,'DAIKIN',2.43,'Diploma Service Engineer',2024),(11,472,'WHEELS INDIA',2.32,'Technical Assistant',2024),(12,473,'DAIKIN',2.43,'Diploma Service Engineer',2024),(13,474,'DAIKIN',2.43,'Diploma Service Engineer',2024),(14,475,'WHEELS INDIA',2.32,'Technical Assistant',2024),(15,476,'DAIKIN ',2.43,'Diploma Service Engineer',2024),(16,477,'DAIKIN',2.43,'Diploma Service Engineer',2024),(17,478,'DAIKIN',2.43,'Diploma Service Engineer',2024),(18,479,'DAIKIN',2.43,'Diploma Service Engineer',2024),(19,480,'DAIKIN',2.43,'Diploma Service Engineer',2024),(20,454,'MEDHA SERVO DRIVES',2.98,'Diploma Service Engineer',2024),(21,456,'DAIKIN',2.43,'Diploma Service Engineer',2024),(22,457,'DAIKIN ',2.43,'Diploma Service Engineer',2024),(23,459,'DAIKIN',2.43,'Diploma Service Engineer',2024),(24,460,'DAIKIN',2.43,'Diploma Service Engineer',2024),(25,461,'DAIKIN',2.43,'Diploma Service Engineer',2024),(26,462,'DAIKIN',2.43,'Diploma Service Engineer',2024),(27,463,'DAIKIN',2.43,'Diploma Service Engineer',2024),(28,481,'DAIKIN',2.43,'Diploma Service Engineer',2024),(29,482,'DAIKIN',2.43,'Diploma Service Engineer',2024),(30,483,'DAIKIN',2.43,'Diploma Service Engineer',2024),(31,484,'DAIKIN',2.43,'Diploma Service Engineer',2024),(32,485,'DAIKIN',2.43,'Diploma Service Engineer',2024),(33,486,'WHEELS INDIA',2.32,'Technical Assistant',2024),(34,487,'DAIKIN',2.43,'Diploma Service Engineer',2024),(35,488,'DAIKIN',2.43,'Diploma Service Engineer',2024),(36,489,'DAIKIN',2.43,'Diploma Service Engineer',2024),(37,490,'WHEELS INDIA',2.32,'Technical Assistant',2024),(38,491,'DAIKIN',2.43,'Diploma Service Engineer',2024),(39,492,'DAIKIN',2.43,'Diploma Service Engineer',2024),(40,493,'Bhagawati products',1.57,'Diploma Engineering Trainee',2025),(41,494,'Daikin Aircondition',2.57,'Diploma Service Engineer',2025),(42,495,'Medha servo drives ltd',3.2,'Diploma Service Engineer',2025),(43,496,'Edic Semicon',4,'PCB Design Engineer',2025),(44,497,'Bhagawati products',1.57,'Diploma Engineering Trainee',2025),(45,498,'Edic Semicon',4,'PCB Design Engineer',2025),(46,499,'Texas instruments',9.02,'Product Developer',2025),(47,500,'Edic Semicon',4,'PCB Design Engineer',2025),(48,501,'Bhagawati products',1.57,'Diploma Engineering Trainee',2025),(49,502,'Edic Semicon',4,'Design verification Engineer',2025),(50,503,'Edic Semicon',4,'Design verification Engineer',2025),(51,504,'Medha servo drives ltd',3.2,'Diploma Service Engineer',2025),(52,505,'Edic Semicon',4,'Design verification Engineer',2025),(53,506,'Edic Semicon',4,'Design verification Engineer',2025),(54,507,'Edic Semicon',4,'IOT Embraced Engineer',2025),(55,508,'Edic Semicon',4,'IOT Embraced Engineer',2025),(56,509,'Edic Semicon',4,'IOT Embraced Engineer',2025),(57,510,'Edic Semicon',4,'PCB Design Engineer',2025),(58,511,'Medha servo drives ltd',3.2,'Diploma Service Engineer',2025),(59,512,'Medha servo drives ltd',3.2,'Diploma Service Engineer',2025),(60,513,'Bhagawati products',1.57,'Diploma Engineering Trainee',2025),(61,514,'Medha servo drives ltd',3.2,'Diploma Service Engineer',2025),(62,515,'Bhagawati products',1.57,'Diploma Engineering Trainee',2025),(63,516,'Bhagawati products',1.57,'Diploma Engineering Trainee',2025),(64,517,'Jagath securities',1,'System operator',2025),(65,518,'Bhagawati products',1.57,'Diploma Engineering Trainee',2025),(66,519,'Medha servo drives ltd',3.2,'Diploma Service Engineer',2025),(67,520,'Bhagawati products',1.57,'Diploma Engineering Trainee',2025),(68,521,'Bhagawati products',1.57,'Diploma Engineering Trainee',2025),(69,522,'Bhagawati products',1.57,'Diploma Engineering Trainee',2025),(70,523,'Medha servo drives ltd',3.2,'Diploma Service Engineer',2025),(71,524,'Medha servo drives ltd',3.2,'Diploma Service Engineer',2025),(72,525,'Daikin Aircondition',2.57,'Diploma Service Engineer',2025),(73,526,'Daikin Aircondition',2.57,'Diploma Service Engineer',2025),(74,527,'Bhagawati products',1.57,'Diploma Engineering Trainee',2025),(75,528,'Bhagawati products',1.57,'Diploma Engineering Trainee',2025),(76,529,'Edic Semicon',4,'IOT Engineer',2025),(77,530,'Edic Semicon',4,'Embedded Engneer',2025),(78,531,'Edic Semicon',4,'IOT Engineer',2025),(79,533,'Daikin Aircondition',2.57,'Diploma Service Engineer',2025),(80,534,'Medha servo drives ltd',3.2,'Diploma Service Engineer',2025),(81,535,'Bhagawati products',1.57,'Diploma Engineering Trainee',2025),(82,532,'Edic Semicon',4,'IOT Engineer',2025),(83,388,'TECHNICS SOFTWARE SOLUTIONS',3.05,'Associative Software Engineer',2024),(84,358,'TECHNICS SOFTWARE SOLUTIONS',3.05,'Associative Software Engineer',2024),(85,386,'ALCOVEX PRODUCT STUDIO',5.8,'Associative Software Engineer',2024),(86,384,'TECHNICS SOFTWARE SOLUTIONS',3.05,'Associative Software Engineer',2024),(87,116,'THOUGHTWORKS TECHNOLOGY INDIA PVT LTD',8,'INTERN TRAINEE',2025),(88,112,'WIPRO TECHNOLOGIES',5,'INTERN TRAINEE',2025),(89,94,'Tecnics Integration Technologies Pvt. Ltd.',3.05,'Associate Software Engineer',2025),(90,102,'Tecnics Integration Technologies Pvt. Ltd.',3.05,'Associate Software Engineer',2025),(91,103,'Tecnics Integration Technologies Pvt. Ltd.',3.05,'Associate Software Engineer',2025),(92,110,'Tecnics Integration Technologies Pvt. Ltd.',3.05,'Associate Software Engineer',2025),(93,119,'Tecnics Integration Technologies Pvt. Ltd.',3.05,'Associate Software Engineer',2025),(94,121,'Tecnics Integration Technologies Pvt. Ltd.',3.05,'Associate Software Engineer',2025),(95,359,'PIXEL WIND TECHNOLOGIES',1.4,'Junior Digital marketer',2024),(96,361,'PIXEL WIND TECHNOLOGIES',1.4,'Junior Digital marketer',2024),(97,357,'PIXEL WIND TECHNOLOGIES',1.4,'Junior Digital marketer',2024),(98,379,'PIXEL WIND TECHNOLOGIES',1.4,'Junior Digital marketer',2024),(99,380,'PIXEL WIND TECHNOLOGIES',1.4,'Junior Digital marketer',2024),(100,122,'Tecnics Integration Technologies Pvt. Ltd.',3.05,'Associate Software Engineer',2025),(101,104,'ROYAL ENFIELD',2.22,'Management Trainee',2025),(102,392,'TECHNICS SOFTWARE SOLUTIONS',3.05,'Associative Software Engineer',2024),(103,397,'TECHNICS SOFTWARE SOLUTIONS',3.05,'Associative Software Engineer',2024),(104,118,'ROYAL ENFIELD',2.22,'Management Trainee',2025),(105,117,'YOKOHAMA OHT INDIA LTD',2,'Management Trainee',2025),(106,89,'AVISHKARAN INDUSTRIES PVT LTD',1.586,'Diloma Engineering Trainee',2025),(107,91,'AVISHKARAN INDUSTRIES PVT LTD',1.586,'Diloma Engineering Trainee',2025),(108,90,'AVISHKARAN INDUSTRIES PVT LTD',1.586,'Diloma Engineering Trainee',2025),(109,120,'AVISHKARAN INDUSTRIES PVT LTD',1.586,'Diloma Engineering Trainee',2025),(110,123,'AVISHKARAN INDUSTRIES PVT LTD',1.586,'Diloma Engineering Trainee',2025),(111,127,'AVISHKARAN INDUSTRIES PVT LTD',1.586,'Diloma Engineering Trainee',2025),(112,93,'AVISHKARAN INDUSTRIES PVT LTD',1.44,'Jr.Digital Marketer',2025),(113,131,'AVISHKARAN INDUSTRIES PVT LTD',1.586,'Diloma Engineering Trainee',2025),(114,92,'Pixel Wind Technologies',1.44,'Jr.Digital Marketer',2025),(115,95,'Pixel Wind Technologies',1.44,'Jr.Digital Marketer',2025),(116,97,'Pixel Wind Technologies',1.44,'Jr.Digital Marketer',2025),(117,96,'Pixel Wind Technologies',1.44,'Jr.Digital Marketer',2025),(118,98,'Pixel Wind Technologies',1.44,'Jr.Digital Marketer',2025),(119,99,'Pixel Wind Technologies',1.44,'Jr.Digital Marketer',2025),(120,100,'Pixel Wind Technologies',1.44,'Jr.Digital Marketer',2025),(121,101,'Pixel Wind Technologies',1.44,'Jr.Digital Marketer',2025),(122,105,'Pixel Wind Technologies',1.44,'Jr.Digital Marketer',2025),(123,106,'Pixel Wind Technologies',1.44,'Jr.Digital Marketer',2025),(124,107,'Pixel Wind Technologies',1.44,'Jr.Digital Marketer',2025),(125,108,'Pixel Wind Technologies',1.44,'Jr.Digital Marketer',2025),(126,109,'Pixel Wind Technologies',1.44,'Jr.Digital Marketer',2025),(127,111,'Pixel Wind Technologies',1.44,'Jr.Digital Marketer',2025),(128,113,'Pixel Wind Technologies',1.44,'Jr.Digital Marketer',2025),(129,114,'Pixel Wind Technologies',1.44,'Jr.Digital Marketer',2025),(130,115,'Pixel Wind Technologies',1.44,'Jr.Digital Marketer',2025),(131,124,'Pixel Wind Technologies',1.44,'Jr.Digital Marketer',2025),(132,125,'Pixel Wind Technologies',1.44,'Jr.Digital Marketer',2025),(133,126,'Pixel Wind Technologies',1.44,'Jr.Digital Marketer',2025),(134,128,'Pixel Wind Technologies',1.44,'Jr.Digital Marketer',2025),(135,129,'Pixel Wind Technologies',1.44,'Jr.Digital Marketer',2025),(136,130,'Pixel Wind Technologies',1.44,'Jr.Digital Marketer',2025),(137,133,'Pixel Wind Technologies',1.44,'Jr.Digital Marketer',2025);
+/*!40000 ALTER TABLE `placements` ENABLE KEYS */;
+UNLOCK TABLES;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
+-- Dump completed on 2025-06-19  9:43:00
