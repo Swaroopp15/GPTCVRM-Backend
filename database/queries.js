@@ -19,8 +19,14 @@ const addDepartment = 'INSERT INTO departments (depo_code, department_name, visi
 const deleteDepartment = 'DELETE FROM departments WHERE depo_code = ?';
 const updateDepartment = "UPDATE departments SET  department_name = CASE WHEN ? IS NOT NULL AND ? != '' THEN ? ELSE department_name END,  vision = CASE WHEN ? IS NOT NULL AND ? != '' THEN ? ELSE vision END,  mission = CASE WHEN ? IS NOT NULL AND ? != '' THEN ? ELSE mission END, avg_pass = CASE WHEN ? IS NOT NULL AND ? != '' THEN ? ELSE avg_pass END WHERE depo_code = ?;";
 
-// placement based queries
+// images handling queries
+const addImage = 'INSERT INTO images (image_name, image_path) VALUES (?, ?)';
+const getImageByName = 'SELECT * FROM images WHERE image_name = ?';
+const deleteImage = 'DELETE FROM images WHERE image_name = ?';
+const updateImage = 'UPDATE images SET image_path = ? WHERE image_name = ?';
+const getImages = 'SELECT * FROM images';
 
+// placement based queries
 const addPlacement = 'INSERT INTO placements (student_id, company, package, placement_year, role) VALUES (?, ?, ?, ?, ?)';
 const getPlacementYears = 'SELECT DISTINCT p.placement_year FROM placements p  JOIN students s ON s.id = p.student_id WHERE s.depo_code = ? ORDER BY placement_year DESC';
 const getPlacements = 'SELECT p.*, s.* FROM placements p   JOIN students s ON s.id = p.student_id WHERE p.placement_year = ?';
@@ -162,4 +168,9 @@ module.exports = {
   deleteStudent,
   updateStudent,
   getStudents,
+  getImageByName,
+  addImage,
+  deleteImage,
+  updateImage,
+  getImages
 }

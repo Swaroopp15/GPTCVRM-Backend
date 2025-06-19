@@ -44,10 +44,12 @@ const getCollegeInfo = async (req, res) => {
         const result = await db.execute('SELECT * FROM college_info');
         const departments = await db.execute(queries.getAllDepartments);
         const committees = await db.execute(queries.getCommitteeNames);  
+        const images = await db.execute(queries.getImages);
               
         res.json({college: result[0],
             departments: departments[0],
-            committees: committees[0]
+            committees: committees[0],
+            images
         })
         
     } catch (error) {
