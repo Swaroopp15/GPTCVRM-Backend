@@ -7,7 +7,8 @@ const db = mysql.createPool({
     port: process.env.DB_PORT || 8000,
     password: process.env.DB_PASSWORD || 'Swaroop@15',
     database: 'gpt_cvrm',
-    connectionLimit: 10
+    // connectionLimit: 10,
+    multipleStatements: true
 });
 
 module.exports = db;

@@ -111,10 +111,14 @@ const updateLab = async (req, res) => {
     } = req.body;
     const [lab] = await db.query(queries.getLabById, [id]);
     const image_name = lab[0].image_name;
+
+    console.log("image : ",lab);
+    
     
     if (lab.length === 0) {
       return res.status(404).json({ message: "Lab not found" });
     }
+    // if(fs.existsSync(lab))
     const result = await db.query(queries.updateLab, [
       lab_name || lab[0].lab_name,
       description || lab[0].description,

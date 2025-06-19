@@ -44,12 +44,15 @@ const getCollegeInfo = async (req, res) => {
         const result = await db.execute('SELECT * FROM college_info');
         const departments = await db.execute(queries.getAllDepartments);
         const committees = await db.execute(queries.getCommitteeNames);  
-        const images = await db.execute(queries.getImages);
+        const [images] = await db.execute(queries.getImages);
+        const [labs] = await db.execute("SELECT * FROM labs LIMIT 3");
+            //   console.log("Images : ", images);
               
         res.json({college: result[0],
             departments: departments[0],
             committees: committees[0],
-            images
+            images: images,
+            labs: labs
         })
         
     } catch (error) {
