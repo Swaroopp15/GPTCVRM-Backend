@@ -6,7 +6,7 @@ const db = mysql.createPool({
     user: 'root',
     port: process.env.DB_PORT || 8000,
     password: process.env.DB_PASSWORD || 'Swaroop@15',
-    database: 'gpt_cvrm',
+    database: process.env.DB_NAME,
     // connectionLimit: 10,
     multipleStatements: true
 });
