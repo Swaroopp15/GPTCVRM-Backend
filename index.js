@@ -21,7 +21,16 @@ const session = require('express-session');
 const fileUpload = require('express-fileupload');
 const setupDb = require('./database/setupDb');
 
-setupDb();
+new Promise((resolve) => setTimeout(resolve, 10000))
+  .then(() => {
+    return setupDb();
+  })
+  .then(() => {
+    console.log('Database setup completed successfully!');
+  })
+  .catch((err) => {
+    console.error('Error during database setup:', err);
+  });
 
 const app = express();
 app.use(cors({
