@@ -56,13 +56,16 @@ const addDepartment = async (req, res) => {
           fs.mkdirSync(imagePath, {recursive: true});
         }
     req.files.department_image.mv(path.join(imagePath, req.files.department_image.name), (err) => {
-      console.log("failed to upload image : ", err);
-      throw new Error(err);
+      if(err) {
+        console.log("failed to upload image : ", err);
+        throw new Error(err);
+      }else{
+        console.log("image uploaded successfully");
+      }
     })
     res.json({ message: "Department added successfully" });
   } catch (error) {
     console.log("Error in adding new Department : ", error);
-    
     res.status(500).json({message: "Error adding department", error });
   }
 };
