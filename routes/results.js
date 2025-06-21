@@ -1,14 +1,15 @@
 const express = require('express');
 const { getAllResults, addResult, deleteResult, getAvailableYears, searchResult, addBulkResults } = require('../controllers/results');
+const isAuthenticated = require('../controllers/isLogined');
 
 const router = express.Router();
 
 router.get('/get-results', getAllResults);
 router.get('/get-years', getAvailableYears);
-router.post('/', addResult);
-router.delete('/:student_id', deleteResult);
 router.get('/search',searchResult);
-router.post('/bulk', addBulkResults);
+router.post('/', isAuthenticated, addResult);
+router.delete('/:student_id', isAuthenticated, deleteResult);
+router.post('/bulk', isAuthenticated, addBulkResults);
 
 
 

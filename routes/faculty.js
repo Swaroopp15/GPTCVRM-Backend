@@ -7,13 +7,14 @@ const {
     deleteFaculty
 } = require('../controllers/faculty');
 const upload = require('../handlers/multer');
+const isAuthenticated = require('../controllers/isLogined');
 
 const router = express.Router();
 
 router.get('/', getAllFaculty);
 router.get('/:id', getFacultyById);
-router.post('/', addFaculty);
-router.put('/:id', updateFaculty);
-router.delete('/:id', deleteFaculty);
+router.post('/', isAuthenticated, addFaculty);
+router.put('/:id', isAuthenticated, updateFaculty);
+router.delete('/:id', isAuthenticated, deleteFaculty);
 
 module.exports = router;
