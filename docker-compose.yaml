@@ -7,6 +7,10 @@ services:
     restart: always
     env_file:
       - .env
+    depends_on:
+      gpt-db:
+        condition: service_healthy
+
 
   gpt-db:
     image: mysql:8.0 
@@ -16,9 +20,14 @@ services:
       - .env
     ports:
       - "8000:3306"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 5s
+      timeout: 10s
+      retries: 10
     volumes:
       - gpt_db_data:/var/lib/mysql
-      - ./dump:/docker-entrypoint-initdb.d
-
+      - ./database/schema:/docker-entrypoint-initdb.d/schema
+      - ./database/data:/docker-entrypoint-initdb.d/data
 volumes:
   gpt_db_data:
