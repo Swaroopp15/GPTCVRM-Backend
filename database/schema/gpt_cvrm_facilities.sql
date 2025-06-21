@@ -16,38 +16,19 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `labs`
+-- Table structure for table `facilities`
 --
 
-DROP TABLE IF EXISTS `labs`;
+DROP TABLE IF EXISTS `facilities`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `labs` (
+CREATE TABLE `facilities` (
+  `name` varchar(60) DEFAULT NULL,
+  `about` text,
   `id` int NOT NULL AUTO_INCREMENT,
-  `depo_code` varchar(10) NOT NULL,
-  `lab_name` varchar(100) NOT NULL,
-  `description` text,
-  `capacity` int DEFAULT NULL,
-  `equipment` text,
-  `image_name` varchar(255) NOT NULL,
-  `budget` decimal(10,4) DEFAULT NULL,
-  `conducted_labs` varchar(60) DEFAULT NULL,
-  `specifications` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `depo_code` (`depo_code`),
-  CONSTRAINT `labs_ibfk_1` FOREIGN KEY (`depo_code`) REFERENCES `departments` (`depo_code`) ON DELETE CASCADE,
-  CONSTRAINT `labs_chk_1` CHECK ((`capacity` > 0))
-) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `labs`
---
-
-LOCK TABLES `labs` WRITE;
-/*!40000 ALTER TABLE `labs` DISABLE KEYS */;
-/*!40000 ALTER TABLE `labs` ENABLE KEYS */;
-UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -58,4 +39,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-06-19  9:43:01
+-- Dump completed on 2025-06-19  9:42:59

@@ -32,15 +32,6 @@ CREATE TABLE `events` (
 ) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
---
--- Dumping data for table `events`
---
-
-LOCK TABLES `events` WRITE;
-/*!40000 ALTER TABLE `events` DISABLE KEYS */;
-INSERT INTO `events` VALUES (6,'farewell-2026','In a solemn ceremony at Government Polytechnic Chodavaram, under the supervision of Principal Dr. A. Nagaraju and the heads of various departments, students bid farewell to their academic journey. The event was filled with emotional speeches, heartfelt memories, and well-wishing for the students\' future endeavors.','uploads/events/farewell-2025','2025-03-25'),(7,'farewell-2025','In a solemn ceremony at Government Polytechnic Chodavaram, under the supervision of Principal Dr. A. Nagaraju and the heads of various departments, students bid farewell to their academic journey. The event was filled with emotional speeches, heartfelt memories, and well-wishing for the students\' future endeavors.','uploads/events/farewell-2025','2025-03-25'),(9,'Sankrathi Celebrations','A cheerful celebrations for this year Sankrathi is held in our college on 14-01-2024, under the supervision of our honorable Principle and other staff.','uploads/events/Sankrathi Celebrations','2024-01-14'),(10,'Sankrathi Celebrations','A cheerful celebrations for this year Sankrathi is held in our college on 14-01-2024, under the supervision of our honorable Principle and other staff.','uploads/events/Sankrathi Celebrations','2024-01-14'),(14,'Fest','A cheerful celebrations for this year Sankrathi is held in our college on 14-01-2024, under the supervision of our honorable Principle and other staff.','uploads/events/,,,,','2024-01-14'),(15,'upload test','dadfaljesonoao','uploads/events/upload-test','2025-05-29');
-/*!40000 ALTER TABLE `events` ENABLE KEYS */;
-UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;

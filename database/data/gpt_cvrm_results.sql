@@ -16,26 +16,6 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `results`
---
-
-DROP TABLE IF EXISTS `results`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `results` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `student_id` int NOT NULL,
-  `application_id` varchar(30) NOT NULL,
-  `percentage` decimal(8,4) DEFAULT NULL,
-  `passed_year` year DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `student_id` (`student_id`),
-  UNIQUE KEY `application_id` (`application_id`),
-  CONSTRAINT `results_ibfk_1` FOREIGN KEY (`student_id`) REFERENCES `students` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=288 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
 -- Dumping data for table `results`
 --
 

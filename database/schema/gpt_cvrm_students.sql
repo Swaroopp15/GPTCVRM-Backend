@@ -16,31 +16,28 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `notifications`
+-- Table structure for table `students`
 --
 
-DROP TABLE IF EXISTS `notifications`;
+DROP TABLE IF EXISTS `students`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `notifications` (
+CREATE TABLE `students` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `title` varchar(255) DEFAULT NULL,
-  `date` date DEFAULT NULL,
-  `isLink` tinyint(1) DEFAULT NULL,
-  `link` varchar(100) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  `pin` varchar(30) NOT NULL,
+  `name` varchar(100) NOT NULL,
+  `admission_year` year DEFAULT NULL,
+  `depo_code` varchar(10) DEFAULT NULL,
+  `semester` enum('1','2','3','4','5','6','completed','pending') DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `pin` (`pin`),
+  UNIQUE KEY `pin_2` (`pin`),
+  KEY `FK_DEPO_STUDENT` (`depo_code`),
+  CONSTRAINT `FK_DEPO_STUDENT` FOREIGN KEY (`depo_code`) REFERENCES `departments` (`depo_code`)
+) ENGINE=InnoDB AUTO_INCREMENT=536 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
---
--- Dumping data for table `notifications`
---
 
-LOCK TABLES `notifications` WRITE;
-/*!40000 ALTER TABLE `notifications` DISABLE KEYS */;
-INSERT INTO `notifications` VALUES (1,'Alert Students! Exam Results are announced (C-20)','2025-12-24',1,'https://sbtet.ap.gov.in/APSBTET/gradeWiseResults.do'),(2,'New event: Annual Day','2025-03-30',0,''),(3,'Semester Exams Scheduled for Final Year Students','2025-04-03',0,''),(4,'Notifications check','2025-03-31',0,''),(7,'POLYCET 2026',NULL,NULL,NULL);
-/*!40000 ALTER TABLE `notifications` ENABLE KEYS */;
-UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -51,4 +48,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-06-19  9:43:00
+-- Dump completed on 2025-06-19  9:43:01

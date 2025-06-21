@@ -16,29 +16,24 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `images`
+-- Table structure for table `results`
 --
 
-DROP TABLE IF EXISTS `images`;
+DROP TABLE IF EXISTS `results`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `images` (
+CREATE TABLE `results` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `image_name` varchar(255) NOT NULL,
-  `image_path` varchar(255) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  `student_id` int NOT NULL,
+  `application_id` varchar(30) NOT NULL,
+  `percentage` decimal(8,4) DEFAULT NULL,
+  `passed_year` year DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `student_id` (`student_id`),
+  UNIQUE KEY `application_id` (`application_id`),
+  CONSTRAINT `results_ibfk_1` FOREIGN KEY (`student_id`) REFERENCES `students` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=288 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `images`
---
-
-LOCK TABLES `images` WRITE;
-/*!40000 ALTER TABLE `images` DISABLE KEYS */;
-INSERT INTO `images` VALUES (5,'college_banner','uploads/images/college_banner.png'),(6,'college_logo','uploads/images/college_logo.jpeg'),(7,'college_image','uploads/images/college_image.png'),(8,'commissioner_image','uploads/images/commissioner_image.png');
-/*!40000 ALTER TABLE `images` ENABLE KEYS */;
-UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -49,4 +44,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-06-19  9:43:01
+-- Dump completed on 2025-06-19  9:42:59

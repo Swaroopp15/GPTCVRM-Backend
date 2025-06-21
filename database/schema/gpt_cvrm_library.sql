@@ -16,30 +16,21 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `ebooks`
+-- Table structure for table `library`
 --
 
-DROP TABLE IF EXISTS `ebooks`;
+DROP TABLE IF EXISTS `library`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `ebooks` (
+CREATE TABLE `library` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `title` varchar(100) NOT NULL,
-  `author` varchar(100) NOT NULL,
-  `link` varchar(100) NOT NULL,
+  `title` varchar(255) DEFAULT NULL,
+  `author` varchar(255) DEFAULT NULL,
+  `volumes` int DEFAULT NULL,
+  `type` enum('book','journal') DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=29 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `ebooks`
---
-
-LOCK TABLES `ebooks` WRITE;
-/*!40000 ALTER TABLE `ebooks` DISABLE KEYS */;
-INSERT INTO `ebooks` VALUES (2,'Programming in C ','E. Balaguruswami','https://aiict.edu.bd/wp-content/uploads/2022/09/ansi-c-balaguruswamy-c-language-PDFDrive.com-.pdf'),(3,'Programming in C ','E. Balaguruswami','https://aiict.edu.bd/wp-content/uploads/2022/09/ansi-c-balaguruswamy-c-language-PDFDrive.com-.pdf'),(4,'Programming in C ','E. Balaguruswami','https://aiict.edu.bd/wp-content/uploads/2022/09/ansi-c-balaguruswamy-c-language-PDFDrive.com-.pdf'),(6,'Programming in C ','E. Balaguruswami','uploads\\ebooks\\ansi-c-balaguruswamy-c-language.pdf'),(7,'Frontend Test','Frontend Test','uploads\\ebooks\\ansi-c-balaguruswamy-c-language.pdf'),(8,'Testing','testing','uploads\\ebooks\\ansi-c-balaguruswamy-c-language.pdf');
-/*!40000 ALTER TABLE `ebooks` ENABLE KEYS */;
-UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -50,4 +41,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-06-19  9:42:59
+-- Dump completed on 2025-06-19  9:43:00

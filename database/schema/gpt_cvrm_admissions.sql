@@ -33,16 +33,6 @@ CREATE TABLE `admissions` (
   CONSTRAINT `admissions_ibfk_1` FOREIGN KEY (`depo_code`) REFERENCES `departments` (`depo_code`) ON DELETE SET NULL
 ) ENGINE=InnoDB AUTO_INCREMENT=30 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `admissions`
---
-
-LOCK TABLES `admissions` WRITE;
-/*!40000 ALTER TABLE `admissions` DISABLE KEYS */;
-INSERT INTO `admissions` VALUES (15,2019,60,66,'CME'),(16,2020,58,66,'CME'),(17,2021,55,66,'CME'),(18,2022,50,66,'CME'),(19,2023,62,66,'CME'),(20,2024,59,66,'CME'),(21,2025,57,66,'CME'),(22,2019,52,66,'ECE'),(23,2020,54,66,'ECE'),(24,2021,50,66,'ECE'),(25,2022,48,66,'ECE'),(26,2023,55,66,'ECE'),(27,2024,53,66,'ECE'),(28,2025,51,66,'ECE'),(29,2026,66,56,'CME');
-/*!40000 ALTER TABLE `admissions` ENABLE KEYS */;
-UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;

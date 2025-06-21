@@ -16,32 +16,6 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `faculty`
---
-
-DROP TABLE IF EXISTS `faculty`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `faculty` (
-  `faculty_id` int NOT NULL AUTO_INCREMENT,
-  `faculty_name` varchar(115) NOT NULL,
-  `email` varchar(100) DEFAULT NULL,
-  `faculty_role` varchar(50) DEFAULT NULL,
-  `depo_code` varchar(10) DEFAULT NULL,
-  `image_name` varchar(150) DEFAULT NULL,
-  `department_id` int DEFAULT NULL,
-  `date_of_joining` varchar(10) DEFAULT NULL,
-  `qualification` varchar(15) DEFAULT NULL,
-  `number` varchar(20) DEFAULT NULL,
-  `experience` smallint DEFAULT NULL,
-  PRIMARY KEY (`faculty_id`),
-  UNIQUE KEY `email` (`email`),
-  KEY `idx_faculty_depo_code` (`depo_code`),
-  CONSTRAINT `faculty_ibfk_1` FOREIGN KEY (`depo_code`) REFERENCES `departments` (`depo_code`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=76 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
 -- Dumping data for table `faculty`
 --
 

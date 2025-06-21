@@ -16,28 +16,6 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `students`
---
-
-DROP TABLE IF EXISTS `students`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `students` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `pin` varchar(30) NOT NULL,
-  `name` varchar(100) NOT NULL,
-  `admission_year` year DEFAULT NULL,
-  `depo_code` varchar(10) DEFAULT NULL,
-  `semester` enum('1','2','3','4','5','6','completed','pending') DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `pin` (`pin`),
-  UNIQUE KEY `pin_2` (`pin`),
-  KEY `FK_DEPO_STUDENT` (`depo_code`),
-  CONSTRAINT `FK_DEPO_STUDENT` FOREIGN KEY (`depo_code`) REFERENCES `departments` (`depo_code`)
-) ENGINE=InnoDB AUTO_INCREMENT=536 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
 -- Dumping data for table `students`
 --
 

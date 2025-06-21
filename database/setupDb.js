@@ -5,7 +5,7 @@ const db = require('./db');
 const setupDb = async () => {
   try {
     console.log("Setting up database from dump folder in project root...");
-    const dumpDir = path.resolve(__dirname, '..', 'dump');
+    const dumpDir = path.resolve(__dirname, 'dump');
 
     if (!fs.existsSync(dumpDir)) {
       throw new Error(`Dump directory not found at: ${dumpDir}`);
