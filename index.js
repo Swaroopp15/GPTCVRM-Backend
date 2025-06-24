@@ -23,8 +23,9 @@ const setupDb = require('./database/setupDb');
 const createBucket = require('./minio/createBucket');
 const createFolders = require('./minio/createFolders');
 const minioClient = require('./minio/connectMinio');
+const uploadObject = require('./minio/uploadFiles');
 
-new Promise((resolve) => setTimeout(resolve, 15000))
+new Promise((resolve) => setTimeout(resolve, 10000))
   .then(() => {
     return setupDb();
   })
@@ -44,6 +45,9 @@ new Promise((resolve) => setTimeout(resolve, 15000))
   })
   .then(() => {
     return createFolders(bucketName);
+  })
+  .then(async() => {
+    await uploadObject("./public/uploads/lab_images-1742797758286.jpg", 'labs', bucketName);
   })
   .then(() => {
     console.log('minio buckets setup completed successfully!');
