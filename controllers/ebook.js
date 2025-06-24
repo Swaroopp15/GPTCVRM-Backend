@@ -3,37 +3,49 @@ const db = require("../database/db");
 const queries = require("../database/queries");
 const path = require('path');
 const fs = require("fs");
+const uploadObject = require("../minio/uploadFiles");
 
 const addEbook = async (req, res) => {
   const { title, author, link } = req.body;
   try {
     if (link && !req.files?.ebook) {
-
       await db.execute(queries.addEbook, [
         title, author, link
       ]);
       return res.status(201).json({ message: "Ebook added successfully" });
     }
     
-    const ebookPath = path.join(process.cwd(), "public", "uploads", "ebooks");
-    // Logic to check if the path is available, if not creating the directory
-    if (!fs.existsSync(ebookPath)) {
-      fs.mkdirSync(ebookPath, { recursive: true });
+    if (!req.files?.ebook) {
+      return res.status(400).json({ error: "No ebook file provided" });
     }
-    const ebookPathName = path.join(ebookPath, req.files.ebook.name);
-    req.files.ebook.mv(ebookPathName,async (err) => {
-      if (err) {
-        console.error("Failed to upload ebook file:", err);
-        return res.status(500).json({ error: "Failed to upload ebook file" });
-      }
-      else {
-        const ebookFilePath = path.join('uploads', 'ebooks', req.files.ebook.name);
-        await db.execute(queries.addEbook, [
-        title, author, ebookFilePath
+
+    const tempPath = path.join(process.cwd(), "temp");
+    if (!fs.existsSync(tempPath)) {
+      fs.mkdirSync(tempPath, { recursive: true });
+    }
+
+    const tempFilePath = path.join(tempPath, req.files.ebook.name);
+    await req.files.ebook.mv(tempFilePath);
+
+    try {
+      const bucketName = "gptcvrm";
+      await uploadObject(tempFilePath, "ebooks", bucketName);
+      
+      const ebookPath = `${bucketName}/ebooks/${req.files.ebook.name}`;
+      
+      await db.execute(queries.addEbook, [
+        title, author, ebookPath
       ]);
+      
+      fs.unlinkSync(tempFilePath);
+      
+      return res.status(201).json({ message: "Ebook added successfully" });
+    } catch (uploadError) {
+      if (fs.existsSync(tempFilePath)) {
+        fs.unlinkSync(tempFilePath);
       }
-    });
-    res.status(201).json({ message: "Ebook added successfully" });
+      throw uploadError;
+    }
   } catch (error) {
     console.error("Error adding ebook:", error);
     res.status(500).json({ error: "Error adding ebook" });
@@ -47,14 +59,11 @@ const deleteEbook = async (req, res) => {
     if (!ebook) {
       return res.status(404).json({ error: "Ebook not found" });
     }
-    const ebookPath = ebook.ebook_path;
+    
     await db.execute(queries.deleteEbook, [id]);
-    if (ebookPath && fs.existsSync(ebookPath)) {
-      fs.unlinkSync(ebookPath);
-    }
+    
     res.status(200).json({ message: "Ebook deleted successfully" });
-  }
-  catch (error) {
+  } catch (error) {
     console.error("Error deleting ebook:", error);
     res.status(500).json({ error: "Error deleting ebook" });
   }
@@ -63,30 +72,44 @@ const deleteEbook = async (req, res) => {
 const updateEbook = async (req, res) => {
   const { id, title, author, link } = req.body;
   try {
-    if (link && !req.files.ebook) {
+    if (link && !req.files?.ebook) {
       await db.execute(queries.updateEbook, [
         title, author, link, id
       ]);
+      return res.status(200).json({ message: "Ebook updated successfully" });
     }
     
-    const ebookPath = path.join(process.cwd(), "public", "uploads", "ebooks");
-    // Logic to check if the path is available, if not creating the directory
-    if (!fs.existsSync(ebookPath)) {
-      fs.mkdirSync(ebookPath, { recursive: true });
+    if (!req.files?.ebook) {
+      return res.status(400).json({ error: "No ebook file provided" });
     }
-    const ebookPathName = path.join(ebookPath, req.files.ebook_file.name);
-    req.files.ebook.mv(ebookPathName, async (err) => {
-      if (err) {
-        console.error("Failed to upload ebook file:", err);
-        return res.status(500).json({ error: "Failed to upload ebook file" });
+
+    const tempPath = path.join(process.cwd(), "temp");
+    if (!fs.existsSync(tempPath)) {
+      fs.mkdirSync(tempPath, { recursive: true });
+    }
+
+    const tempFilePath = path.join(tempPath, req.files.ebook.name);
+    await req.files.ebook.mv(tempFilePath);
+
+    try {
+      const bucketName = "gptcvrm";
+      await uploadObject(tempFilePath, "ebooks", bucketName);
+      
+      const ebookPath = `${bucketName}/ebooks/${req.files.ebook.name}`;
+      
+      await db.execute(queries.updateEbook, [
+        title, author, ebookPath, id
+      ]);
+      
+      fs.unlinkSync(tempFilePath);
+      
+      return res.status(200).json({ message: "Ebook updated successfully" });
+    } catch (uploadError) {
+      if (fs.existsSync(tempFilePath)) {
+        fs.unlinkSync(tempFilePath);
       }
-      else {
-        await db.execute(queries.updateEbook, [
-          title, author, ebookPathName, id
-        ]);
-      }
-    });
-    res.status(200).json({ message: "Ebook updated successfully" });
+      throw uploadError;
+    }
   } catch (error) {
     console.error("Error updating ebook:", error);
     res.status(500).json({ error: "Error updating ebook" });
