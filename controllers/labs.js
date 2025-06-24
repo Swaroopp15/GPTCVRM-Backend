@@ -2,6 +2,7 @@ const db = require("../database/db");
 const queries = require("../database/queries");
 const fs = require("fs");
 const path = require("path");
+const fileSaver = require("../Utilities/fileSaver");
 
 const addLabs = async (req, res) => {
   const {
@@ -15,24 +16,22 @@ const addLabs = async (req, res) => {
     budget,
   } = req.body;
 
-  const image_name = "labs/" + lab_name.toLowerCase().split(" ").join("_");
+  const folderName = lab_name.toLowerCase().split(" ").join("_");
+  const imageFolder = `labs/${folderName}`;
+
   try {
-    // const images = req.files.lab_images;
-    const imagePath = path.join(process.cwd(), "public", "uploads", image_name);
-    if (!fs.existsSync(imagePath)) {
-      fs.mkdirSync(imagePath, { recursive: true });
-    }
-    const eventImages = Array.isArray(req.files.lab_images)
+    const images = Array.isArray(req.files.lab_images)
       ? req.files.lab_images
       : [req.files.lab_images];
-    eventImages.forEach((image) => {
-      const pathh = path.join(imagePath, image.name);
-      image.mv(pathh, (err) => {
-        if (!err) return;
-        console.log("Error in saving event image : ", err);
-      });
-    });
 
+    // Upload images to MinIO
+    const imagePaths = [];
+    for (const image of images) {
+      const savedPath = await fileSaver(image, image.name, `labs/${folderName}`);
+      imagePaths.push(savedPath);
+    }
+
+    // Insert into DB
     await db.query(queries.addLab, [
       depo_code,
       lab_name,
@@ -42,12 +41,13 @@ const addLabs = async (req, res) => {
       conducted_labs,
       specifications,
       budget,
-      image_name,
+      imageFolder,
     ]);
-    res.send({ message: "Posted lab details successfully" });
+
+    res.send({ message: "Lab details posted successfully" });
   } catch (error) {
-    res.send({ message: error.message });
     console.error("Error posting lab details:", error);
+    res.status(500).send({ message: error.message });
   }
 };
 

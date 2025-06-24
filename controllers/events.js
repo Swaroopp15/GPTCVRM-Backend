@@ -2,6 +2,8 @@ const queries = require("../database/queries");
 const db = require("../database/db");
 const path = require("path");
 const fs = require("fs");
+const fileSaver = require("../Utilities/fileSaver");
+
 
 const getEvents = async (req, res) => {
   try {
@@ -33,44 +35,49 @@ const getEvents = async (req, res) => {
 const addEvent = async (req, res) => {
   try {
     const { name, description, date } = req.body;
+
     if (!name || !description || !date) {
-      return res
-        .status(400)
-        .json({ message: "Name, description, and date are required" });
+      return res.status(400).json({ message: "Name, description, and date are required" });
     }
+
     const newDate = new Date(date.split("-").reverse().join("-"));
     if (isNaN(newDate.getTime())) {
       return res.status(400).json({ message: "Invalid date format" });
     }
-    const images = `uploads/events/${name.split(" ").join("-")}`;
-    const imagePath = path.join(process.cwd(), "public", images);
-    if (!fs.existsSync(imagePath)) {
-      fs.mkdirSync(imagePath, { recursive: true });
+
+    const folder = `events/${name.toLowerCase().split(" ").join("-")}`;
+    const uploadedImages = [];
+
+    if (req.files?.event_images) {
+      const eventImages = Array.isArray(req.files.event_images)
+        ? req.files.event_images
+        : [req.files.event_images];
+
+      for (const image of eventImages) {
+        const savedPath = await fileSaver(image, image.name.split(".")[0], folder);
+        uploadedImages.push(savedPath);
+      }
     }
-    const eventImages = Array.isArray(req.files.event_images)
-      ? req.files.event_images
-      : [req.files.event_images];
-    eventImages.forEach((image) => {
-      const pathh = path.join(imagePath, image.name);
-      image.mv(pathh, (err) => {
-        if (!err) return;
-        console.log("Error in saving event image : ", err);
-      });
-    });
+
     const result = await db.query(queries.addEvent, [
       name,
       description,
-      images,
+      folder, // Save folder path
       newDate,
     ]);
-    res
-      .status(201)
-      .json({ message: "Event added successfully", eventId: result.insertId });
+
+    res.status(201).json({
+      message: "Event added successfully",
+      eventId: result.insertId,
+      images: uploadedImages,
+    });
   } catch (error) {
-    console.log("Error at adding event", error);
-    res.status(500).json({ message: "Error at adding event", error });
+    console.log("Error adding event:", error);
+    res.status(500).json({ message: "Error adding event", error });
   }
 };
+
+
 const deleteEvent = async (req, res) => {
   try {
     const { id } = req.params;

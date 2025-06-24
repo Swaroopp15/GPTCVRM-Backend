@@ -2,6 +2,7 @@ const db = require("../database/db");
 const queries = require("../database/queries");
 const fs = require("fs");
 const path = require("path");
+const fileSaver = require("../Utilities/fileSaver");
 
 const getImages = async (req, res) => {
   try {
@@ -20,30 +21,27 @@ const addImage = async (req, res) => {
     }
 
     const image = req.files.image;
-    let {imageName} = req.body;
-    imageName = imageName.split(" ").join("_");
-    const newImageName = imageName +path.extname(image.name);
-    const uploadPath = path.join(__dirname, "..", "public", "uploads", "images", newImageName);
+    let { imageName } = req.body;
 
-    // Create directory if it doesn't exist
-    fs.mkdirSync(path.dirname(uploadPath), { recursive: true });
+    if (!imageName) {
+      return res.status(400).json({ message: "Image name is required" });
+    }
 
-    // Move the file to the uploads directory
-    image.mv(uploadPath, (err) => {
-      if (err) {
-        return res.status(500).json({ message: "Error uploading image", error: err });
-      }
+    const sanitizedImageName = imageName.split(" ").join("_");
+    const savedPath = await fileSaver(image, sanitizedImageName, "images");
 
-      // Save image info to the database
-      db.execute(queries.addImage, [imageName, `uploads/images/${newImageName}`])
-        .then(() => res.json({ message: "Image uploaded successfully", imageName }))
-        .catch(dbErr => res.status(500).json({ message: "Error saving image info", error: dbErr }));
+    await db.execute(queries.addImage, [sanitizedImageName, savedPath]);
+
+    res.json({
+      message: "Image uploaded successfully",
+      imageName: sanitizedImageName,
+      imagePath: savedPath,
     });
   } catch (error) {
     console.error("Error in addImage:", error);
     res.status(500).json({ message: "Internal Server Error", error });
   }
-}
+};
 
 const deleteImage = async (req, res) => {
   try {
