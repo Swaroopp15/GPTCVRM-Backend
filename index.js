@@ -20,8 +20,11 @@ const imagesRouter = require('./routes/images');
 const session = require('express-session');
 const fileUpload = require('express-fileupload');
 const setupDb = require('./database/setupDb');
+const createBucket = require('./minio/createBucket');
+const createFolders = require('./minio/createFolders');
+const minioClient = require('./minio/connectMinio');
 
-new Promise((resolve) => setTimeout(resolve, 10000))
+new Promise((resolve) => setTimeout(resolve, 15000))
   .then(() => {
     return setupDb();
   })
@@ -31,7 +34,23 @@ new Promise((resolve) => setTimeout(resolve, 10000))
   .catch((err) => {
     console.error('Error during database setup:', err);
   });
-
+  const bucketName = "gptcvrm";
+  new Promise((resolve) => setTimeout(resolve, 10000))
+  .then(() => {
+    if(!minioClient.bucketExists(bucketName)) {
+      return createBucket(bucketName);
+    }
+    return ;
+  })
+  .then(() => {
+    return createFolders(bucketName);
+  })
+  .then(() => {
+    console.log('minio buckets setup completed successfully!');
+  })
+  .catch((err) => {
+    console.error('Error during minio buckets setup:', err);
+  });
 const app = express();
 app.use(cors({
   origin: 'http://localhost:5173',
