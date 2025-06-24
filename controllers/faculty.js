@@ -2,6 +2,8 @@ const db = require("../database/db");
 const queries = require("../database/queries");
 const fs = require("fs");
 const path = require("path");
+const uploadObject = require("../minio/uploadFiles");
+const fileSaver = require("../Utilities/fileSaver");
 
 // Get all faculty members
 const getAllFaculty = async (req, res) => {
@@ -20,9 +22,9 @@ const getAllFaculty = async (req, res) => {
       let image = null;
       try {
         if (fs.existsSync(facultyImageFolderPath)) {
-          const files = fs.readdirSync(facultyImageFolderPath); // Read all files inside folder
+          const files = fs.readdirSync(facultyImageFolderPath);
           if (files.length > 0) {
-            image = `uploads/faculty/${faculty.image_name}/${files[0]}`; // ✅ Return URL path
+            image = `uploads/faculty/${faculty.image_name}/${files[0]}`; 
           }
         }
       } catch (err) {
@@ -54,7 +56,12 @@ const getFacultyById = async (req, res) => {
 const addFaculty = async (req, res) => {
   const { faculty_name, email, faculty_role, depo_code, number, qualification } = req.body;
   try {
-    const image_name = email;
+    if (!req.files?.image) {
+      return res.status(400).json({ message: "Faculty image is required" });
+    }
+
+    const imagePath = await fileSaver(req.files.image, email, "faculty");
+
     await db.execute(queries.addFaculty, [
       faculty_name,
       email,
@@ -62,21 +69,12 @@ const addFaculty = async (req, res) => {
       depo_code,
       number,
       qualification,
-      image_name,
+      imagePath, 
     ]);
-    const folder = path.join(process.cwd(), "public", "uploads", "faculty", image_name);
-    if(!fs.existsSync(folder)) {
-      fs.mkdirSync(folder, {recursive: true});
-    }
-    req.files.image.mv(path.join(folder, req.files.image.name), (err) => {
-      if (!err) return 
-      console.log("Error occured in storing image");
-      
-    })
-    res.status(201).json({ message: "Faculty added successfully" });
-  } catch (error) {
-    console.log("Error in adding a new faculty : ",error);
 
+    return res.status(201).json({ message: "Faculty added successfully" });
+  } catch (error) {
+    console.log("Error in adding a new faculty:", error);
     res.status(500).json({ message: "Error adding faculty", error });
   }
 };

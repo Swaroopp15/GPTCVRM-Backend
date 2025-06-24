@@ -4,7 +4,7 @@ const queries = require("../database/queries");
 const path = require('path');
 const fs = require("fs");
 const uploadObject = require("../minio/uploadFiles");
-const fileSaver = require("../utilities/fileSaver");
+const fileSaver = require("../Utilities/fileSaver");
 
 const addEbook = async (req, res) => {
   const { title, author, link } = req.body;
