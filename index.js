@@ -25,6 +25,7 @@ const createFolders = require('./minio/createFolders');
 const minioClient = require('./minio/connectMinio');
 const uploadObject = require('./minio/uploadFiles');
 
+<<<<<<< HEAD
 new Promise((resolve) => setTimeout(resolve, 10000))
   .then(() => {
     return setupDb();
@@ -40,20 +41,38 @@ new Promise((resolve) => setTimeout(resolve, 10000))
   .then(() => {
     if(!minioClient.bucketExists(bucketName)) {
       return createBucket(bucketName);
+=======
+const bucketName = "gptcvrm";
+new Promise((resolve) => setTimeout(resolve, 10000))
+  .then(async () => {
+    try {
+      const exists = await minioClient.bucketExists(bucketName);
+      if (!exists) {
+        console.log(`Bucket ${bucketName} does not exist, creating...`);
+        await minioClient.makeBucket(bucketName);
+        console.log(`Bucket ${bucketName} created successfully`);
+      } else {
+        console.log(`Bucket ${bucketName} already exists`);
+      }
+      return bucketName;
+    } catch (err) {
+      console.error('Error checking/creating bucket:', err);
+      throw err;
+>>>>>>> 74eca15b5fd75c6c89fbfeb0eb20853ec1180fac
     }
-    return ;
   })
-  .then(() => {
+  .then((bucketName) => {
     return createFolders(bucketName);
   })
   .then(async() => {
     await uploadObject("./public/uploads/lab_images-1742797758286.jpg", 'labs', bucketName);
   })
   .then(() => {
-    console.log('minio buckets setup completed successfully!');
+    console.log('MinIO setup completed successfully!');
   })
   .catch((err) => {
-    console.error('Error during minio buckets setup:', err);
+    console.error('Error during MinIO setup:', err);
+    process.exit(1);
   });
 const app = express();
 app.use(cors({
