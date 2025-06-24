@@ -3,6 +3,7 @@ const db = require("../database/db");
 const queries = require("../database/queries");
 const path = require('path');
 const fs = require("fs");
+const fileSaver = require('../Utilities/fileSaver');
 
 
 const getAllDepartments = async (req, res) => {
@@ -42,31 +43,31 @@ const getDepartment = async (req, res) => {
 // Add a new department
 const addDepartment = async (req, res) => {
   const { depo_code, department_name, vision, mission, avg_pass } = req.body;
+
   try {
+    let imagePath = null;
+
+    if (req.files?.department_image) {
+      imagePath = await fileSaver(
+        req.files.department_image,
+        depo_code.toLowerCase(),
+        "departments"
+      );
+    }
+const department_image = imagePath ? imagePath : null;
     await db.execute(queries.addDepartment, [
       depo_code,
       department_name,
       vision,
       mission,
-      avg_pass
+      avg_pass,
+      department_image,
     ]);
-    const imagePath = path.join(process.cwd(), "public", "uploads", "departments", depo_code.toLowerCase());
-    // Logic to check if the path is availble, if not creating the directory
-        if(!fs.existsSync(imagePath)) {
-          fs.mkdirSync(imagePath, {recursive: true});
-        }
-    req.files.department_image.mv(path.join(imagePath, req.files.department_image.name), (err) => {
-      if(err) {
-        console.log("failed to upload image : ", err);
-        throw new Error(err);
-      }else{
-        console.log("image uploaded successfully");
-      }
-    })
-    res.json({ message: "Department added successfully" });
+
+    res.json({ message: "Department added successfully", department_image });
   } catch (error) {
-    console.log("Error in adding new Department : ", error);
-    res.status(500).json({message: "Error adding department", error });
+    console.log("Error in adding new Department:", error);
+    res.status(500).json({ message: "Error adding department", error });
   }
 };
 

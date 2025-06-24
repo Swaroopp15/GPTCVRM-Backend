@@ -15,7 +15,7 @@ const addAdmission = "INSERT INTO admissions (depo_code, year, intake, allocated
 // department based queries
 const getAllDepartments = "SELECT department_name, depo_code FROM departments";
 const getDepartment = "SELECT d.depo_code, d.department_name, d.vision, d.mission, d.avg_pass,JSON_ARRAYAGG(JSON_OBJECT('faculty_id', f.faculty_id,'faculty_name', f.faculty_name,'email', f.email,'faculty_role', f.faculty_role,'image_name', f.image_name)) AS faculty_members FROM departments d LEFT JOIN faculty f ON d.depo_code = f.depo_code WHERE d.depo_code = ? GROUP BY d.depo_code;";
-const addDepartment = 'INSERT INTO departments (depo_code, department_name, vision, mission, avg_pass) VALUES (?, ?, ?, ?, ?)';
+const addDepartment = 'INSERT INTO departments (depo_code, department_name, vision, mission, avg_pass, department_image) VALUES (?, ?, ?, ?, ?, ?)';
 const deleteDepartment = 'DELETE FROM departments WHERE depo_code = ?';
 const updateDepartment = "UPDATE departments SET  department_name = CASE WHEN ? IS NOT NULL AND ? != '' THEN ? ELSE department_name END,  vision = CASE WHEN ? IS NOT NULL AND ? != '' THEN ? ELSE vision END,  mission = CASE WHEN ? IS NOT NULL AND ? != '' THEN ? ELSE mission END, avg_pass = CASE WHEN ? IS NOT NULL AND ? != '' THEN ? ELSE avg_pass END WHERE depo_code = ?;";
 
