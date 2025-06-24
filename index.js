@@ -25,7 +25,6 @@ const createFolders = require('./minio/createFolders');
 const minioClient = require('./minio/connectMinio');
 const uploadObject = require('./minio/uploadFiles');
 
-<<<<<<< HEAD
 new Promise((resolve) => setTimeout(resolve, 10000))
   .then(() => {
     return setupDb();
@@ -36,12 +35,6 @@ new Promise((resolve) => setTimeout(resolve, 10000))
   .catch((err) => {
     console.error('Error during database setup:', err);
   });
-  const bucketName = "gptcvrm";
-  new Promise((resolve) => setTimeout(resolve, 10000))
-  .then(() => {
-    if(!minioClient.bucketExists(bucketName)) {
-      return createBucket(bucketName);
-=======
 const bucketName = "gptcvrm";
 new Promise((resolve) => setTimeout(resolve, 10000))
   .then(async () => {
@@ -58,7 +51,6 @@ new Promise((resolve) => setTimeout(resolve, 10000))
     } catch (err) {
       console.error('Error checking/creating bucket:', err);
       throw err;
->>>>>>> 74eca15b5fd75c6c89fbfeb0eb20853ec1180fac
     }
   })
   .then((bucketName) => {
