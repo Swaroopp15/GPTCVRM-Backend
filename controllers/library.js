@@ -1,5 +1,6 @@
 const db = require('../database/db');
 const queries = require('../database/queries');
+const getBulkUrls = require('../utilities/getUrlsBulk');
 
 
 const getLibrary = async (req, res) => {
@@ -7,12 +8,13 @@ const getLibrary = async (req, res) => {
     const overview = await db.query(queries.getOverview);
     const books = await db.query(queries.getBooks);
     const journals = await db.query(queries.getJournals);
-    const ebooks = await db.query("SELECT * FROM ebooks")  
+    const ebooks = await db.query("SELECT * FROM ebooks");
+    const ebooksWithImages = await getBulkUrls(ebooks[0], 'link'); 
     const data = {
       library : overview[0],
       books: books[0],
       journals: journals[0],
-      ebooks : ebooks[0]
+      ebooks : ebooksWithImages
     }
     res.json(data);
   } catch (error) {

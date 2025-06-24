@@ -9,3 +9,5 @@ const getPresignedUrl = async (fileName, method = "GET",expiry = 60*60) => {
     throw error;
   }
 }
+
+module.exports = getPresignedUrl;

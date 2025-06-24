@@ -17,7 +17,7 @@ const fileSaver = async (file, name, folder) => {
     await uploadObject(tempFilePath, folder, bucketName);
     // deleting the temporary folder.
     fs.unlinkSync(tempFilePath);
-    return `${bucketName}/${folder}/${name}`;
+    return `${folder}/${name}${path.extname(file.name)}`;
   } catch (error) {
     console.log("error in saving the file");
     throw error;

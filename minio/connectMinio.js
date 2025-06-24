@@ -6,6 +6,7 @@ const minioClient = new Minio.Client({
   port: process.env.MINIO_PORT,
   useSSL: false,
   pathStyle: true,
+  publicUrl: 'http:localhost:9000'
 });
 
 module.exports = minioClient;
