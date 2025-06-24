@@ -56,9 +56,9 @@ new Promise((resolve) => setTimeout(resolve, 10000))
   .then((bucketName) => {
     return createFolders(bucketName);
   })
-  .then(async() => {
-    await uploadObject("./public/uploads/lab_images-1742797758286.jpg", 'labs', bucketName);
-  })
+  // .then(async() => {
+  //   await uploadObject("./public/uploads/lab_images-1742797758286.jpg", 'labs', bucketName);
+  // })
   .then(() => {
     console.log('MinIO setup completed successfully!');
   })
