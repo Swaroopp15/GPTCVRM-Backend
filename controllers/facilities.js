@@ -2,6 +2,8 @@ const db = require("../database/db");
 const queries = require("../database/queries");
 const fs = require("fs");
 const path = require("path");
+const fileSaver = require("../Utilities/fileSaver");
+
 
 const getFacilities = async (req, res) => {
   try {
@@ -46,39 +48,25 @@ const addFacilities = async (req, res) => {
   try {
     const { name, about } = req.body;
     const images = Array.isArray(req.files?.images)
-      ? req.files?.images
+      ? req.files.images
       : [req.files?.images];
-    // checking if the images are avaiblae
-    if (!images) {
-      console.log("No images available");
-      res.status(400).send({ message: "No images sent" });
-      return;
+
+    if (!images || !images[0]) {
+      return res.status(400).send({ message: "No images sent" });
     }
-    const data = await db.query(queries.addFacility, [name, about]);
-    // Logic to check if the path is availble, if not creating the directory
-    const currentPath = path.join(
-      process.cwd(),
-      "public",
-      "uploads",
-      "facility",
-      name.toLowerCase().split(" ").join("_")
+
+    const imagePaths = await Promise.all(
+      images.map((image, index) =>
+        fileSaver(image, `${name.toLowerCase()}_${index}`, "facility")
+      )
     );
-    if (!fs.existsSync(currentPath)) {
-      fs.mkdirSync(currentPath);
-    }
-    // adding each image to the server filesystem
-    images.forEach((image, index) => {
-      const imgExtension = path.extname(image.name);
-      const fileName = index + imgExtension;
-      const newPath = path.join(currentPath, fileName);
-      image.mv(newPath, (err) => {
-        if (err) {
-          console.log("Failed to upload image for adding new Facility : ", err);
-          return res.status(500).send(err);
-        }
-      });
+
+    await db.query(queries.addFacility, [name, about, imagePaths.join(",")]);
+
+    res.status(201).send({
+      message: "Facility added successfully",
+      images: imagePaths,
     });
-    res.status(201).send({ message: "Facility added successfully", data });
   } catch (error) {
     console.log("Error in adding new facility : ", error);
     res.status(500).send({ message: "Error in adding Facility", error });
