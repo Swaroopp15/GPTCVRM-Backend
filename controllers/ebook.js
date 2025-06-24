@@ -4,12 +4,13 @@ const queries = require("../database/queries");
 const path = require('path');
 const fs = require("fs");
 const uploadObject = require("../minio/uploadFiles");
+const fileSaver = require("../utilities/fileSaver");
 
 const addEbook = async (req, res) => {
   const { title, author, link } = req.body;
   try {
     if (link && !req.files?.ebook) {
-      await db.execute(queries.addEbook, [
+     await db.execute(queries.addEbook, [
         title, author, link
       ]);
       return res.status(201).json({ message: "Ebook added successfully" });
@@ -18,32 +19,13 @@ const addEbook = async (req, res) => {
     if (!req.files?.ebook) {
       return res.status(400).json({ error: "No ebook file provided" });
     }
-
-    const tempPath = path.join(process.cwd(), "temp");
-    if (!fs.existsSync(tempPath)) {
-      fs.mkdirSync(tempPath, { recursive: true });
-    }
-
-    const tempFilePath = path.join(tempPath, req.files.ebook.name);
-    await req.files.ebook.mv(tempFilePath);
-
     try {
-      const bucketName = "gptcvrm";
-      await uploadObject(tempFilePath, "ebooks", bucketName);
-      
-      const ebookPath = `${bucketName}/ebooks/${req.files.ebook.name}`;
-      
+      const ebookPath = await fileSaver(req.files.ebook,title, "ebooks")
       await db.execute(queries.addEbook, [
         title, author, ebookPath
       ]);
-      
-      fs.unlinkSync(tempFilePath);
-      
       return res.status(201).json({ message: "Ebook added successfully" });
     } catch (uploadError) {
-      if (fs.existsSync(tempFilePath)) {
-        fs.unlinkSync(tempFilePath);
-      }
       throw uploadError;
     }
   } catch (error) {
