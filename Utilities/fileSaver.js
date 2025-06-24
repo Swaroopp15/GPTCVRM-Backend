@@ -14,7 +14,7 @@ const fileSaver = async (file, name, folder) => {
     await file.mv(tempFilePath);
     const bucketName = process.env.MINIO_BUCKET;
     // uploading the file into the minio bucket
-    await uploadObject(tempFilePath, "ebooks", bucketName);
+    await uploadObject(tempFilePath, folder, bucketName);
     // deleting the temporary folder.
     fs.unlinkSync(tempFilePath);
     return `${bucketName}/${folder}/${name}`;
