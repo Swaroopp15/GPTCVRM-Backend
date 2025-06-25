@@ -122,26 +122,15 @@ const updateEvent = async (req, res) => {
     ]);
     // only executed if new images are sent
     if (req.files?.event_images) {
-      // creating new path   
-      const imagePath = path.join(process.cwd(), "public", images);
-      if (fs.existsSync(imagePath)) {
-        fs.rmSync(imagePath, {recursive: true, force: true})
-        fs.mkdirSync(imagePath, { recursive: true });
+     fileDeletor(result[0].images+ '/');
+     const eventImages = Array.isArray(req.files.event_images)
+        ? req.files.event_images
+        : [req.files.event_images];
+
+      for (const image of eventImages) {
+        const savedPath = await fileSaver(image, image.name.split(".")[0], folder);
+        uploadedImages.push(savedPath);
       }
-      // checking if event_images is array, if not an array then converting it into an array :- 
-      // If from frontend we only send a single image it will be sent as an object not as array
-      // so we convert the object into an array with single element, if multiple images are sent there is
-      // no problem here, as event_images will be in a array format
-      const eventImages = Array.isArray(req.files.event_images) ? req.files.event_images : [req.files.event_images];
-      // Adding images to new path
-      eventImages.forEach((image) => {
-        const pathh = path.join(imagePath, image.name);
-        image.mv(pathh, (err) => {
-          if (!err) return;
-          console.log("Error in saving event image : ", err);
-        });
-      });
-      
     }
 
     return res.status(200).json({ message: "Event updated successfully" });

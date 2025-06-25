@@ -98,7 +98,7 @@ const updateFacility = async (req, res) => {
   try {
     const { id } = req.params;
     const { name, about, changeImage } = req.body;
-    const facility = await db.query("SELECT * FROM facilities WHERE id = ?", [
+    const [facility] = await db.query("SELECT * FROM facilities WHERE id = ?", [
       id,
     ]);
     const data = await db.query(queries.updateFacility, [
@@ -106,46 +106,20 @@ const updateFacility = async (req, res) => {
       about || facility[0].about,
       id,
     ]);
+
     if (data.affectedRows === 0) {
       return res.send(400).send({ message: "No faculty found with the id" });
     }
     if (changeImage) {
       const images = req.files.images;
-      if (images.length > 0) {
-        // logic to delete old images folder
-        const imagePath = path.join(
-          process.cwd(),
-          "public",
-          "uploads",
-          "facility",
-          facility[0].name.toLowerCase().split(" ").join("_")
-        );
-        fs.rmdirSync(imagePath);
+      fileDeletor(`facility/${facility[0].name}/`);
+      const eventImages = Array.isArray(req.files.images)
+        ? req.files.images
+        : [req.files.images];
 
-        // logic to add new images
-        const folderName = name || facility[0].name;
-         const currentPath = path.join(
-      process.cwd(),
-      "public",
-      "uploads",
-      "facility",
-      folderName.toLowerCase().split(" ").join("_")
-    );
-    if (!fs.existsSync(currentPath)) {
-      fs.mkdirSync(currentPath);
-    }
-    // adding each image to the server filesystem
-    images.forEach((image, index) => {
-      const imgExtension = path.extname(image.name);
-      const fileName = index + imgExtension;
-      const newPath = path.join(currentPath, fileName);
-      image.mv(newPath, (err) => {
-        if (err) {
-          console.log("Failed to upload image for adding new Facility : ", err);
-          return res.status(500).send(err);
-        }
-      });
-    });
+      for (const image of eventImages) {
+        const savedPath = await fileSaver(image, image.name.split(".")[0], `facility/${facility[0].name}`);
+        uploadedImages.push(savedPath);
       }
     }
     res.status(200).send({ message: "Facility updated successfully", data });
