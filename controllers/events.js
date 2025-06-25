@@ -3,6 +3,7 @@ const db = require("../database/db");
 const path = require("path");
 const fs = require("fs");
 const fileSaver = require("../utilities/fileSaver");
+const fileDeletor = require("../utilities/fileDeletor");
 
 
 const getEvents = async (req, res) => {
@@ -81,10 +82,12 @@ const addEvent = async (req, res) => {
 const deleteEvent = async (req, res) => {
   try {
     const { id } = req.params;
+    const [event] = await db.query(queries.getEventById, [id]);
     const result = await db.query(queries.deleteEvent, [id]);
     if (result.affectedRows === 0) {
       return res.status(404).json({ message: "Event not found" });
     }
+    await fileDeletor(event[0].images+ '/');
     res.json({ message: "Event deleted successfully" });
   } catch (error) {
     console.log("Error at deleting event", error);
