@@ -2,7 +2,7 @@ const db = require("../database/db");
 const queries = require("../database/queries");
 const fs = require("fs");
 const path = require("path");
-const fileSaver = require("../Utilities/fileSaver");
+const fileSaver = require("../utilities/fileSaver");
 
 const addLabs = async (req, res) => {
   const {

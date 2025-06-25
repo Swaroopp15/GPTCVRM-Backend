@@ -3,7 +3,7 @@ const db = require("../database/db");
 const queries = require("../database/queries");
 const path = require('path');
 const fs = require("fs");
-const fileSaver = require('../Utilities/fileSaver');
+const fileSaver = require('../utilities/fileSaver');
 
 
 const getAllDepartments = async (req, res) => {

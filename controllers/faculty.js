@@ -3,8 +3,8 @@ const queries = require("../database/queries");
 const fs = require("fs");
 const path = require("path");
 const uploadObject = require("../minio/uploadFiles");
-const fileSaver = require("../Utilities/fileSaver");
-const fileDeletor = require("../Utilities/fileDeletor");
+const fileSaver = require("../utilities/fileSaver");
+const fileDeletor = require("../utilities/fileDeletor");
 
 // Get all faculty members
 const getAllFaculty = async (req, res) => {
