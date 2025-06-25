@@ -3,6 +3,7 @@ const queries = require("../database/queries");
 const fs = require("fs");
 const path = require("path");
 const fileSaver = require("../utilities/fileSaver");
+const fileDeletor = require("../utilities/fileDeletor");
 
 const addLabs = async (req, res) => {
   const {
@@ -17,7 +18,7 @@ const addLabs = async (req, res) => {
   } = req.body;
 
   const folderName = lab_name.toLowerCase().split(" ").join("_");
-  const imageFolder = `labs/${folderName}`;
+  const imageFolder = `labs/${folderName}/`;
 
   try {
     const images = Array.isArray(req.files.lab_images)
@@ -26,8 +27,9 @@ const addLabs = async (req, res) => {
 
     // Upload images to MinIO
     const imagePaths = [];
-    for (const image of images) {
-      const savedPath = await fileSaver(image, image.name, `labs/${folderName}`);
+    for (const index in images) {
+      const image = images[index];
+      const savedPath = await fileSaver(image, folderName+index, `labs/${folderName}`);
       imagePaths.push(savedPath);
     }
 
@@ -88,10 +90,12 @@ const getLabs = async (req, res) => {
 const deleteLab = async (req, res) => {
   try {
     const { id } = req.params;
+    const [lab] = await db.query(queries.getLabById, [id]);
     const result = await db.query(queries.deleteLab, [id]);
     if (result.affectedRows === 0) {
       return res.status(404).json({ message: "Lab not found" });
     }
+    await fileDeletor(lab[0].image_name);
     res.json({ message: "Lab deleted successfully" });
   } catch (error) {
     console.log("Error at deleting lab", error);
