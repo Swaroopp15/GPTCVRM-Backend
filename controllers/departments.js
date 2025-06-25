@@ -4,6 +4,7 @@ const queries = require("../database/queries");
 const path = require('path');
 const fs = require("fs");
 const fileSaver = require('../utilities/fileSaver');
+const fileDeletor = require('../utilities/fileDeletor');
 
 
 const getAllDepartments = async (req, res) => {
@@ -95,9 +96,9 @@ const updateDepartment = async (req, res) => {
 const deleteDepartment = async (req, res) => {
   const { depo_code } = req.params;
   try {
+    const [department] = await db.query('SELECT * FROM departments WHERE depo_code = ?', [depo_code])
     await db.execute(queries.deleteDepartment, [depo_code]);
-    const imagePath = path.join(process.cwd(), "public", "uploads", "departments", depo_code.toLowerCase());
-    fs.rmSync(imagePath, {recursive:true, force:true});
+    await fileDeletor(department[0].department_image)
     res.json({ message: "Department deleted successfully" });
   } catch (error) {
     console.log("Error in deleting department : ", error);
