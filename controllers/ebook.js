@@ -5,6 +5,7 @@ const path = require('path');
 const fs = require("fs");
 const uploadObject = require("../minio/uploadFiles");
 const fileSaver = require("../utilities/fileSaver");
+const fileDeletor = require("../utilities/fileDeletor");
 
 const addEbook = async (req, res) => {
   const { title, author, link } = req.body;
@@ -43,7 +44,7 @@ const deleteEbook = async (req, res) => {
     }
     
     await db.execute(queries.deleteEbook, [id]);
-    
+    await fileDeletor(ebook[0].link)
     res.status(200).json({ message: "Ebook deleted successfully" });
   } catch (error) {
     console.error("Error deleting ebook:", error);
