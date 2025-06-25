@@ -5,38 +5,31 @@ const path = require("path");
 const uploadObject = require("../minio/uploadFiles");
 const fileSaver = require("../utilities/fileSaver");
 const fileDeletor = require("../utilities/fileDeletor");
+const getPresignedUrl = require("../utilities/getPresignedUrl");
 
 // Get all faculty members
 const getAllFaculty = async (req, res) => {
   try {
     const { depo_code } = req.query;    
     const [rows] = await db.execute(queries.getAllFaculty, [depo_code]);
-    const faculties = rows.map(faculty => {
-      const facultyImageFolderPath = path.join(
-        process.cwd(),
-        "public",
-        "uploads",
-        "faculty",
-        faculty.image_name
-      );
 
+    const faculties = await Promise.all(rows.map(async (faculty) => {
       let image = null;
       try {
-        if (fs.existsSync(facultyImageFolderPath)) {
-          const files = fs.readdirSync(facultyImageFolderPath);
-          if (files.length > 0) {
-            image = `uploads/faculty/${faculty.image_name}/${files[0]}`; 
-          }
-        }
+        // You can update this path if folder structure changes
+        const folderName = "faculty";
+        const fileName = `${faculty.image_name}`; // or .png, based on your storage convention
+        image = await getPresignedUrl(folderName, "faculty@gmail.com.jpg");
       } catch (err) {
-        console.error(`Error fetching images for ${faculty.image_name}:`, err);
+        console.error(`Error generating image URL for ${faculty.image_name}:`, err.message);
       }
-      return {...faculty, image};      
-    });    
+console.log("Image URL:", image);
+      return { ...faculty, image };
+    }));
 
     res.json(faculties);
   } catch (error) {
-    console.log(error);
+    console.error("Error fetching faculty data:", error);
     res.status(500).json({ message: "Error fetching faculty data", error });
   }
 };

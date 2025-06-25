@@ -24,7 +24,11 @@ const createBucket = require('./minio/createBucket');
 const createFolders = require('./minio/createFolders');
 const minioClient = require('./minio/connectMinio');
 const uploadObject = require('./minio/uploadFiles');
+const getPresignedUrl = require('./utilities/getPresignedUrl');
 
+const image = getPresignedUrl("faculty", "faculty@gmail.com.jpg");
+
+// console.log("Image URL:", image);
 new Promise((resolve) => setTimeout(resolve, 10000))
   .then(() => {
     return setupDb();
