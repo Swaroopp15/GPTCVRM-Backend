@@ -3,6 +3,7 @@ const queries = require("../database/queries");
 const fs = require("fs");
 const path = require("path");
 const fileSaver = require("../utilities/fileSaver");
+const fileDeletor = require("../utilities/fileDeletor");
 
 
 const getFacilities = async (req, res) => {
@@ -57,11 +58,11 @@ const addFacilities = async (req, res) => {
 
     const imagePaths = await Promise.all(
       images.map((image, index) =>
-        fileSaver(image, `${name.toLowerCase()}_${index}`, "facility")
+        fileSaver(image, `${name.toLowerCase()}_${index}`, `facility/${name}`)
       )
     );
 
-    await db.query(queries.addFacility, [name, about, imagePaths.join(",")]);
+    await db.query(queries.addFacility, [name, about]);
 
     res.status(201).send({
       message: "Facility added successfully",
@@ -76,22 +77,17 @@ const addFacilities = async (req, res) => {
 const deleteFacility = async (req, res) => {
   try {
     const { id } = req.params;
-    const facility = await db.query("SELECT * FROM facilities WHERE id = ?", [
+    const [facility] = await db.query("SELECT * FROM facilities WHERE id = ?", [
       id,
     ]);
     const data = await db.query(queries.deleteFacility, [id]);
     if (data.affectedRows === 0) {
       return res.send(400).send({ message: "No faculty found with the id" });
     }
+    console.log("facility : ", facility);
+    
+    await fileDeletor(`facility/${facility[0].name}/`)
     res.status(204).send({ message: "Facility Deleted Successfully" });
-    const imagePath = path.join(
-      process.cwd(),
-      "public",
-      "uploads",
-      "facility",
-      facility[0].name.toLowerCase().split(" ").join("_")
-    );
-    fs.unlinkSync(imagePath);
   } catch (error) {
     console.log("Error in deleting facility : ", error);
     res.status(500).send({ message: "Error in deleting facility", error });
