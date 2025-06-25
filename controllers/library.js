@@ -1,6 +1,6 @@
 const db = require('../database/db');
 const queries = require('../database/queries');
-const getBulkUrls = require('../utilities/getUrlsBulk');
+const getBulkUrls = require('../Utilities/getUrlsBulk');
 
 
 const getLibrary = async (req, res) => {

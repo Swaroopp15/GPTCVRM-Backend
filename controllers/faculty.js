@@ -4,6 +4,7 @@ const fs = require("fs");
 const path = require("path");
 const uploadObject = require("../minio/uploadFiles");
 const fileSaver = require("../Utilities/fileSaver");
+const fileDeletor = require("../Utilities/fileDeletor");
 
 // Get all faculty members
 const getAllFaculty = async (req, res) => {
@@ -133,12 +134,25 @@ const updateFaculty = async (req, res) => {
 const deleteFaculty = async (req, res) => {
   const { id } = req.params;
   try {
+    const [faculty] = await db.execute(queries.getFacultyById, [id]);
+    
+    if (faculty.length === 0) {
+      return res.status(404).json({ error: "Faculty not found" });
+    }
+
+    if (faculty[0].image_name) {
+      await fileDeletor(faculty[0].image_name);
+    }
+
     await db.execute(queries.deleteFaculty, [id]);
+    
     res.json({ message: "Faculty deleted successfully" });
   } catch (error) {
+    console.error("Error deleting faculty:", error);
     res.status(500).json({ error: "Error deleting faculty" });
   }
 };
+
 
 module.exports = {
   getAllFaculty,
