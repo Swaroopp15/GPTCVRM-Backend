@@ -11,9 +11,8 @@ services:
       gpt-db:
         condition: service_healthy
 
-
   gpt-db:
-    image: mysql:8.0 
+    image: mysql:8.0
     container_name: gpt-db
     restart: always
     env_file:
@@ -29,5 +28,34 @@ services:
       - gpt_db_data:/var/lib/mysql
       - ./database/schema:/docker-entrypoint-initdb.d/schema
       - ./database/data:/docker-entrypoint-initdb.d/data
+
+  minio:
+    image: minio/minio
+    container_name: minio
+    command: server /data --console-address ":9001"
+    ports:
+      - "9000:9000" # API port
+      - "9001:9001" # Console port
+    env_file:
+      - .env
+    volumes:
+      - minio_data:/data
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 30s
+      timeout: 20s
+      retries: 3
+
+  app:
+    image: "jc21/nginx-proxy-manager:latest"
+    restart: unless-stopped
+    ports:
+      - "80:80" # Public HTTP Port
+      - "443:443" # Public HTTPS Port
+      - "81:81" # Admin Web Port
+    volumes:
+      - ./data:/data
+      - ./letsencrypt:/etc/letsencrypt
+
 volumes:
   gpt_db_data:
