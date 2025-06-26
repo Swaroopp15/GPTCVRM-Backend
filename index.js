@@ -34,7 +34,7 @@ new Promise((resolve) => setTimeout(resolve, 10000))
 
 const app = express();
 app.use(cors({
-  origin: 'http://localhost:5173',
+  origin: process.env.FRONTEND,
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Accept']
